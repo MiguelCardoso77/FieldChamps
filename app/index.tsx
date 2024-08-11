@@ -10,6 +10,9 @@ export default function HomeScreen() {
             <TouchableOpacity style={styles.button} onPress={() => router.push('/profile')}>
                 <Text style={styles.buttonText}>Go to Profile</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/team')}>
+                <Text style={styles.buttonText}>Go to Team</Text>
+            </TouchableOpacity>
             <Text style={styles.text}>FieldChamps.</Text>
         </View>
     );
@@ -25,6 +28,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#007BFF',
         padding: 10,
         borderRadius: 5,
+        marginBottom: 10,
     },
     buttonText: {
         color: '#FFF',
