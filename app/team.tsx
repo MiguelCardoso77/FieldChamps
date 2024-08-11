@@ -1,25 +1,34 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 
-// Lista de jogadores como exemplo
 const players = [
-    { id: '1', name: 'João Silva', position: 'Goleiro' },
-    { id: '2', name: 'Pedro Santos', position: 'Defensor' },
-    { id: '3', name: 'Ana Oliveira', position: 'Meio-campista' },
-    { id: '4', name: 'Maria Fernandes', position: 'Atacante' },
+    { id: '1', name: 'Miguel Cardoso', position: 'Guarda-Redes', image: require('../assets/images/profile.png'), isCaptain: true },
+    { id: '2', name: 'Ana Luísa', position: 'Defesa', image: require('../assets/images/profile.png'), isCaptain: false },
+    { id: '3', name: 'Maria Silva', position: 'Meio-Campo', image: require('../assets/images/profile.png'), isCaptain: false },
+    { id: '4', name: 'Maria Gomes', position: 'Atacante', image: require('../assets/images/profile.png'), isCaptain: false },
 ];
+
+const teamName = 'FieldChamps';
 
 const TeamScreen: React.FC = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Minha Equipe de Futebol</Text>
+            <Text style={styles.header}>{teamName}</Text>
             <FlatList
                 data={players}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View style={styles.playerContainer}>
-                        <Text style={styles.playerName}>{item.name}</Text>
-                        <Text style={styles.playerPosition}>{item.position}</Text>
+                    <View
+                        style={[
+                            styles.playerContainer,
+                            item.isCaptain && styles.captainContainer, // Aplica estilo de capitão condicionalmente
+                        ]}
+                    >
+                        <Image source={item.image} style={styles.playerImage} />
+                        <View>
+                            <Text style={styles.playerName}>{item.name}</Text>
+                            <Text style={styles.playerPosition}>{item.position}</Text>
+                        </View>
                     </View>
                 )}
             />
@@ -33,6 +42,9 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f8f8f8',
     },
+    captainContainer: {
+        backgroundColor: '#FFCF40', // Cor de fundo dourada para o capitão
+    },
     header: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -40,6 +52,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     playerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
         padding: 15,
         marginBottom: 10,
         backgroundColor: '#fff',
@@ -49,6 +63,12 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
+    },
+    playerImage: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        marginRight: 15,
     },
     playerName: {
         fontSize: 18,
