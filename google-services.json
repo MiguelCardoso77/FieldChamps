@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "822457382832",
+    "project_id": "fieldchamps",
+    "storage_bucket": "fieldchamps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:822457382832:android:09db97725ff2d4af478875",
+        "android_client_info": {
+          "package_name": "com.fieldchamps.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDR0QjoLrdLpGZvk1YvfzyzI-oZXEPwh5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
