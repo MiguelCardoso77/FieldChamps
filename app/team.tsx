@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const players = [
     { id: '1', name: 'Miguel Cardoso', position: 'Guarda-Redes', image: require('../assets/images/profile.png'), isCaptain: true },
@@ -11,6 +12,11 @@ const players = [
 const teamName = 'FieldChamps';
 
 const TeamScreen: React.FC = () => {
+    const router = useRouter();
+
+    const handlePlayerPress = (playerId: string) => {
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.header}>{teamName}</Text>
@@ -18,18 +24,19 @@ const TeamScreen: React.FC = () => {
                 data={players}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View
+                    <TouchableOpacity
                         style={[
                             styles.playerContainer,
-                            item.isCaptain && styles.captainContainer, // Aplica estilo de capitão condicionalmente
+                            item.isCaptain && styles.captainContainer,
                         ]}
+                        onPress={() => handlePlayerPress(item.id)}
                     >
                         <Image source={item.image} style={styles.playerImage} />
                         <View>
                             <Text style={styles.playerName}>{item.name}</Text>
                             <Text style={styles.playerPosition}>{item.position}</Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 )}
             />
         </View>
@@ -43,7 +50,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8f8f8',
     },
     captainContainer: {
-        backgroundColor: '#FFCF40', // Cor de fundo dourada para o capitão
+        backgroundColor: '#FFCF40',
     },
     header: {
         fontSize: 24,
