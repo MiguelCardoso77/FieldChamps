@@ -72,34 +72,37 @@ export default function HomeScreen() {
             <View style={styles.menuContainer}>
                 <TouchableOpacity
                     style={styles.menuButton}
-                    onPress={() => router.push('/team')}
+                    onPress={() => router.push('/profile')}
                 >
-                    <MaterialCommunityIcons name="account-group" size={24} color="#ffffff" />
-                    <Text style={styles.buttonText}>Team</Text>
+                    <MaterialCommunityIcons name="home" size={32} color="#ffffff" />
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.menuButton}
-                    onPress={() => router.push('/calendar')}
+                    onPress={() => router.push('/team')}
                 >
-                    <MaterialCommunityIcons name="calendar" size={24} color="#ffffff" />
-                    <Text style={styles.buttonText}>Calendar</Text>
+                    <MaterialCommunityIcons name="account-group" size={32} color="#ffffff" />
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.menuButton}
                     onPress={() => router.push('/fields')}
                 >
-                    <MaterialCommunityIcons name="soccer" size={24} color="#ffffff" />
-                    <Text style={styles.buttonText}>Fields</Text>
+                    <MaterialCommunityIcons name="soccer" size={32} color="#ffffff" />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.menuButton}
+                    onPress={() => router.push('/calendar')}
+                >
+                    <MaterialCommunityIcons name="calendar" size={32} color="#ffffff" />
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.menuButton}
                     onPress={() => router.push('/profile')}
                 >
-                    <MaterialCommunityIcons name="account" size={24} color="#ffffff" />
-                    <Text style={styles.buttonText}>Profile</Text>
+                    <MaterialCommunityIcons name="account" size={32} color="#ffffff" />
                 </TouchableOpacity>
             </View>
         </ScrollView>
@@ -108,9 +111,11 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        flexGrow: 1,
-        backgroundColor: '#f2f2f2',
-        padding: 20,
+        flex: 1,
+        justifyContent: 'space-between',
+    },
+    contentContainer: {
+        flex: 1,
     },
     header: {
         flexDirection: 'row',
@@ -210,16 +215,15 @@ const styles = StyleSheet.create({
     menuContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        width: '100%',
+        alignItems: 'center',
+        backgroundColor: '#0e0a18',
+        paddingVertical: 12,
     },
     menuButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#007BFF',
         paddingVertical: 12,
         paddingHorizontal: 20,
-        borderRadius: 10,
-        elevation: 3,
     },
     buttonText: {
         color: '#ffffff',
