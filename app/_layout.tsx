@@ -8,6 +8,7 @@ export default function Layout() {
             <Stack.Screen name="profile" options={{ title: 'Profile' }} />
             <Stack.Screen name="team" options={{ title: 'Team' }} />
             <Stack.Screen name="player/[playerId]" options={{ title: 'Player Profile' }} />
+            <Stack.Screen name="login" options={{ title: 'Login' }} />
         </Stack>
     );
 }
