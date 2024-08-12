@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigationBar from "@/app/NavigationBar";
+import TopBar from "./TopBar";
 
 const userName = 'Miguel Cardoso';
 
@@ -31,67 +32,71 @@ export default function HomeScreen() {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            {/* Header */}
-            <View style={styles.header}>
-                <Text style={styles.headerText}>Welcome</Text>
-                <MaterialCommunityIcons name="account-circle" size={40} color="#007BFF" />
-            </View>
+        <View style={styles.container}>
+            {/* Top Bar */}
+            <TopBar level={5} />
 
-            {/* Profile Container */}
-            <View style={styles.profileContainer}>
-                <Image
-                    source={require('../assets/images/profile.png')}
-                    style={styles.profileImage}
-                />
-                <View style={styles.textContainer}>
-                    <Text style={styles.greetingText}>Hello,</Text>
-                    <Text style={styles.nameText}>{userName}</Text>
+            <ScrollView contentContainerStyle={styles.contentContainer}>
+                {/* Header */}
+                <View style={styles.header}>
+                    <Text style={styles.headerText}>Welcome</Text>
+                    <MaterialCommunityIcons name="account-circle" size={40} color="#007BFF" />
                 </View>
-            </View>
 
-            {/* Secção de Notificações */}
-            <View style={styles.notificationsContainer}>
-                <Text style={styles.sectionTitle}>Notifications</Text>
-                <FlatList
-                    data={notifications}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <View style={styles.notificationItem}>
-                            <Text style={styles.notificationMessage}>{item.message}</Text>
-                            <Text style={styles.notificationTime}>{item.time}</Text>
-                        </View>
-                    )}
-                />
-            </View>
-
-            {/* Secção de Estatísticas */}
-            <View style={styles.statisticsContainer}>
-                <Text style={styles.sectionTitle}>Statistics</Text>
-                <View style={styles.statisticsList}>
-                    {statistics.map(stat => (
-                        <View key={stat.id} style={styles.statItem}>
-                            <Text style={styles.statLabel}>{stat.label}</Text>
-                            <Text style={styles.statValue}>{stat.value}</Text>
-                        </View>
-                    ))}
+                {/* Profile Container */}
+                <View style={styles.profileContainer}>
+                    <Image
+                        source={require('../assets/images/profile.png')}
+                        style={styles.profileImage}
+                    />
+                    <View style={styles.textContainer}>
+                        <Text style={styles.greetingText}>Hello,</Text>
+                        <Text style={styles.nameText}>{userName}</Text>
+                    </View>
                 </View>
-            </View>
 
-            {/* Barra de Navegação */}
+                {/* Notifications Section */}
+                <View style={styles.notificationsContainer}>
+                    <Text style={styles.sectionTitle}>Notifications</Text>
+                    <FlatList
+                        data={notifications}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => (
+                            <View style={styles.notificationItem}>
+                                <Text style={styles.notificationMessage}>{item.message}</Text>
+                                <Text style={styles.notificationTime}>{item.time}</Text>
+                            </View>
+                        )}
+                    />
+                </View>
+
+                {/* Statistics Section */}
+                <View style={styles.statisticsContainer}>
+                    <Text style={styles.sectionTitle}>Statistics</Text>
+                    <View style={styles.statisticsList}>
+                        {statistics.map(stat => (
+                            <View key={stat.id} style={styles.statItem}>
+                                <Text style={styles.statLabel}>{stat.label}</Text>
+                                <Text style={styles.statValue}>{stat.value}</Text>
+                            </View>
+                        ))}
+                    </View>
+                </View>
+            </ScrollView>
+
+            {/* Navigation Bar */}
             <NavigationBar selected="home" />
-
-        </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'space-between',
     },
     contentContainer: {
-        flex: 1,
+        flexGrow: 1,
+        paddingBottom: 60, // Ensure there's space at the bottom for the NavigationBar
     },
     header: {
         flexDirection: 'row',
@@ -187,24 +192,5 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#222',
         fontWeight: '700',
-    },
-    menuContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: '#0e0a18',
-        paddingVertical: 12,
-    },
-    menuButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-    },
-    buttonText: {
-        color: '#ffffff',
-        fontSize: 16,
-        fontWeight: '500',
-        marginLeft: 10,
     },
 });

@@ -37,6 +37,10 @@ export default function Layout() {
                 name="fields"
                 options={{ title: 'Fields' }}
             />
+            <Stack.Screen
+                name="settings"
+                options={{ title: 'Settings' }}
+            />
 
             <Stack.Screen name="login" options={{ title: 'Login' }} />
         </Stack>
