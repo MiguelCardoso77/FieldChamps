@@ -33,6 +33,10 @@ export default function Layout() {
                 name="calendar"
                 options={{ title: 'Calendar' }}
             />
+            <Stack.Screen
+                name="fields"
+                options={{ title: 'Fields' }}
+            />
 
             <Stack.Screen name="login" options={{ title: 'Login' }} />
         </Stack>

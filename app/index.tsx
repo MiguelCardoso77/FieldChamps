@@ -72,14 +72,6 @@ export default function HomeScreen() {
             <View style={styles.menuContainer}>
                 <TouchableOpacity
                     style={styles.menuButton}
-                    onPress={() => router.push('/profile')}
-                >
-                    <MaterialCommunityIcons name="account" size={24} color="#ffffff" />
-                    <Text style={styles.buttonText}>Profile</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.menuButton}
                     onPress={() => router.push('/team')}
                 >
                     <MaterialCommunityIcons name="soccer" size={24} color="#ffffff" />
@@ -92,6 +84,22 @@ export default function HomeScreen() {
                 >
                     <MaterialCommunityIcons name="calendar" size={24} color="#ffffff" />
                     <Text style={styles.buttonText}>Calendar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.menuButton}
+                    onPress={() => router.push('/fields')}
+                >
+                    <MaterialCommunityIcons name="engine" size={24} color="#ffffff" />
+                    <Text style={styles.buttonText}>Fields</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.menuButton}
+                    onPress={() => router.push('/profile')}
+                >
+                    <MaterialCommunityIcons name="account" size={24} color="#ffffff" />
+                    <Text style={styles.buttonText}>Profile</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
