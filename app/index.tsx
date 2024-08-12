@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import auth from '@react-native-firebase/auth';
 
 const userName = 'Miguel';
 
 export default function HomeScreen() {
     const router = useRouter();
+
+    useEffect(() => {
+        const signInAnonymously = async () => {
+            try {
+                await auth().signInAnonymously();
+                console.log('Usuário anônimo autenticado com sucesso!');
+            } catch (error) {
+                console.error('Erro ao autenticar:', error);
+            }
+        };
+
+        signInAnonymously();
+    }, []);
 
     return (
         <View style={styles.container}>
