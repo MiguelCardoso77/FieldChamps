@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import NavigationBar from "@/app/NavigationBar";
 
 type Field = {
     id: string;
@@ -36,6 +37,9 @@ export default function FieldsScreen() {
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.list}
             />
+
+            {/* Barra de Navegação */}
+            <NavigationBar selected="fields" />
         </View>
     );
 }
@@ -45,6 +49,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f8f8f8',
         padding: 20,
+    },
+    contentContainer: {
+        flexGrow: 1,
+        paddingBottom: 60,
     },
     title: {
         fontSize: 24,

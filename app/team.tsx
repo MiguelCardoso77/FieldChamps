@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Modal, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import NavigationBar from "@/app/NavigationBar";
 
 type Player = {
     id: string;
@@ -81,6 +82,9 @@ const TeamScreen: React.FC = () => {
                     </View>
                 </Modal>
             )}
+
+            {/* Barra de Navegação */}
+            <NavigationBar selected="team" />
         </View>
     );
 };
@@ -90,6 +94,10 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: '#e9ecef',
+    },
+    contentContainer: {
+        flexGrow: 1,
+        paddingBottom: 60,
     },
     captainContainer: {
         backgroundColor: '#FFD700',

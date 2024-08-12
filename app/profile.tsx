@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import NavigationBar from "@/app/NavigationBar";
 
 const userProfile = {
     name: 'Miguel Cardoso',
@@ -26,6 +27,9 @@ export default function ProfileScreen() {
                 <MaterialCommunityIcons name="pencil" size={20} color="#fff" />
                 <Text style={styles.editButtonText}>Edit Profile</Text>
             </TouchableOpacity>
+
+            {/* Barra de Navegação */}
+            <NavigationBar selected="profile" />
         </View>
     );
 }
@@ -35,6 +39,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f5f5f5',
         padding: 20,
+    },
+    contentContainer: {
+        flexGrow: 1,
+        paddingBottom: 60,
     },
     profileHeader: {
         alignItems: 'center',

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import {useRouter} from 'expo-router';
+import NavigationBar from "@/app/NavigationBar";
 
 type DayProps = {
     dateString: string;
@@ -42,6 +43,9 @@ export default function CalendarScreen() {
                     <Text style={styles.selectedDateText}>Selected Date: {selectedDate}</Text>
                 </View>
             )}
+
+            {/* Barra de Navegação */}
+            <NavigationBar selected="calendar" />
         </View>
     );
 }
@@ -53,6 +57,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#f8f8f8',
         padding: 20,
+    },
+    contentContainer: {
+        flexGrow: 1,
+        paddingBottom: 60,
     },
     title: {
         fontSize: 24,

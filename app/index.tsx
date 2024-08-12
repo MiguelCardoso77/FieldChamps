@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { ScrollView, View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import NavigationBar from "@/app/NavigationBar";
 
 const userName = 'Miguel Cardoso';
 
@@ -17,18 +18,27 @@ const statistics = [
     { id: '3', label: 'Assists', value: '8' },
 ];
 
+const screen = 'home';
+
 export default function HomeScreen() {
     const router = useRouter();
 
+    const [selected, setSelected] = useState('home');
+
+    const handlePress = (screen: string) => {
+        setSelected(screen);
+        //router.push(`/${screen}`);
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            {/* Cabeçalho */}
+            {/* Header */}
             <View style={styles.header}>
                 <Text style={styles.headerText}>Welcome</Text>
                 <MaterialCommunityIcons name="account-circle" size={40} color="#007BFF" />
             </View>
 
-            {/* Container do perfil */}
+            {/* Profile Container */}
             <View style={styles.profileContainer}>
                 <Image
                     source={require('../assets/images/profile.png')}
@@ -40,7 +50,7 @@ export default function HomeScreen() {
                 </View>
             </View>
 
-            {/* Seção de Notificações */}
+            {/* Secção de Notificações */}
             <View style={styles.notificationsContainer}>
                 <Text style={styles.sectionTitle}>Notifications</Text>
                 <FlatList
@@ -55,7 +65,7 @@ export default function HomeScreen() {
                 />
             </View>
 
-            {/* Seção de Estatísticas */}
+            {/* Secção de Estatísticas */}
             <View style={styles.statisticsContainer}>
                 <Text style={styles.sectionTitle}>Statistics</Text>
                 <View style={styles.statisticsList}>
@@ -68,43 +78,9 @@ export default function HomeScreen() {
                 </View>
             </View>
 
-            {/* Menu de Navegação */}
-            <View style={styles.menuContainer}>
-                <TouchableOpacity
-                    style={styles.menuButton}
-                    onPress={() => router.push('/profile')}
-                >
-                    <MaterialCommunityIcons name="home" size={32} color="#ffffff" />
-                </TouchableOpacity>
+            {/* Barra de Navegação */}
+            <NavigationBar selected="home" />
 
-                <TouchableOpacity
-                    style={styles.menuButton}
-                    onPress={() => router.push('/team')}
-                >
-                    <MaterialCommunityIcons name="account-group" size={32} color="#ffffff" />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.menuButton}
-                    onPress={() => router.push('/fields')}
-                >
-                    <MaterialCommunityIcons name="soccer" size={32} color="#ffffff" />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.menuButton}
-                    onPress={() => router.push('/calendar')}
-                >
-                    <MaterialCommunityIcons name="calendar" size={32} color="#ffffff" />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.menuButton}
-                    onPress={() => router.push('/profile')}
-                >
-                    <MaterialCommunityIcons name="account" size={32} color="#ffffff" />
-                </TouchableOpacity>
-            </View>
         </ScrollView>
     );
 }
