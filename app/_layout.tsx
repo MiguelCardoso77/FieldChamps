@@ -1,14 +1,36 @@
 import React from 'react';
 import { Stack } from 'expo-router';
 
+// Definindo opções padrão para as telas
+const screenOptions = {
+    headerStyle: {
+        backgroundColor: '#007BFF', // Cor de fundo do cabeçalho
+    },
+    headerTintColor: '#FFF', // Cor do texto do cabeçalho
+    headerTitleStyle: {
+        fontWeight: 'bold',
+    },
+};
+
 export default function Layout() {
     return (
-        <Stack>
-            <Stack.Screen name="index" options={{ title: 'Home' }} />
-            <Stack.Screen name="profile" options={{ title: 'Profile' }} />
-            <Stack.Screen name="team" options={{ title: 'Team' }} />
-            <Stack.Screen name="player/[playerId]" options={{ title: 'Player Profile' }} />
+        <Stack
+            screenOptions={screenOptions} // Aplicando opções padrão para todas as telas
+        >
+            <Stack.Screen
+                name="index"
+                options={{ title: 'FieldChamps' }}
+            />
+            <Stack.Screen
+                name="profile"
+                options={{ title: 'Profile' }}
+            />
+            <Stack.Screen
+                name="team"
+                options={{ title: 'Team' }}
+            />
             <Stack.Screen name="login" options={{ title: 'Login' }} />
         </Stack>
     );
 }
+
