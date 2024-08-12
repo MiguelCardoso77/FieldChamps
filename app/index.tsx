@@ -1,62 +1,126 @@
-import React, { useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React from 'react';
+import { ScrollView, View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
-import auth from '@react-native-firebase/auth';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const userName = 'Miguel';
+const userName = 'Miguel Cardoso';
+
+const notifications = [
+    { id: '1', message: 'New message from Sarah', time: '5 mins ago' },
+    { id: '2', message: 'Your profile was updated', time: '1 hour ago' },
+    { id: '3', message: 'New team member joined', time: '2 hours ago' },
+];
+
+const statistics = [
+    { id: '1', label: 'Matches Played', value: '25' },
+    { id: '2', label: 'Goals Scored', value: '15' },
+    { id: '3', label: 'Assists', value: '8' },
+];
 
 export default function HomeScreen() {
     const router = useRouter();
 
-    useEffect(() => {
-        const signInAnonymously = async () => {
-            try {
-                await auth().signInAnonymously();
-                console.log('Usuário anônimo autenticado com sucesso!');
-            } catch (error) {
-                console.error('Erro ao autenticar:', error);
-            }
-        };
-
-        signInAnonymously();
-    }, []);
-
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
+            {/* Cabeçalho */}
+            <View style={styles.header}>
+                <Text style={styles.headerText}>Welcome</Text>
+                <MaterialCommunityIcons name="account-circle" size={40} color="#007BFF" />
+            </View>
+
+            {/* Container do perfil */}
             <View style={styles.profileContainer}>
                 <Image
                     source={require('../assets/images/profile.png')}
                     style={styles.profileImage}
                 />
                 <View style={styles.textContainer}>
-                    <Text style={styles.greetingText}>Boa tarde</Text>
-                    <Text style={styles.nameText}>{userName}!</Text>
+                    <Text style={styles.greetingText}>Hello,</Text>
+                    <Text style={styles.nameText}>{userName}</Text>
                 </View>
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/profile')}>
-                <Text style={styles.buttonText}>Go to Profile</Text>
-            </TouchableOpacity>
+            {/* Seção de Notificações */}
+            <View style={styles.notificationsContainer}>
+                <Text style={styles.sectionTitle}>Notifications</Text>
+                <FlatList
+                    data={notifications}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <View style={styles.notificationItem}>
+                            <Text style={styles.notificationMessage}>{item.message}</Text>
+                            <Text style={styles.notificationTime}>{item.time}</Text>
+                        </View>
+                    )}
+                />
+            </View>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push('/team')}>
-                <Text style={styles.buttonText}>Go to Team</Text>
-            </TouchableOpacity>
-        </View>
+            {/* Seção de Estatísticas */}
+            <View style={styles.statisticsContainer}>
+                <Text style={styles.sectionTitle}>Statistics</Text>
+                <View style={styles.statisticsList}>
+                    {statistics.map(stat => (
+                        <View key={stat.id} style={styles.statItem}>
+                            <Text style={styles.statLabel}>{stat.label}</Text>
+                            <Text style={styles.statValue}>{stat.value}</Text>
+                        </View>
+                    ))}
+                </View>
+            </View>
+
+            {/* Menu de Navegação */}
+            <View style={styles.menuContainer}>
+                <TouchableOpacity
+                    style={styles.menuButton}
+                    onPress={() => router.push('/profile')}
+                >
+                    <MaterialCommunityIcons name="account" size={24} color="#ffffff" />
+                    <Text style={styles.buttonText}>Profile</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.menuButton}
+                    onPress={() => router.push('/team')}
+                >
+                    <MaterialCommunityIcons name="soccer" size={24} color="#ffffff" />
+                    <Text style={styles.buttonText}>Team</Text>
+                </TouchableOpacity>
+            </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f8f8f8',
+        flexGrow: 1,
+        backgroundColor: '#f2f2f2',
         padding: 20,
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    headerText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
     },
     profileContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 30,
+        padding: 20,
+        backgroundColor: '#ffffff',
+        borderRadius: 15,
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 5,
+        width: '100%',
+        maxWidth: 400,
     },
     profileImage: {
         width: 100,
@@ -65,25 +129,86 @@ const styles = StyleSheet.create({
         marginRight: 20,
     },
     textContainer: {
-        justifyContent: 'center', // Garantir que o texto esteja centralizado verticalmente
+        justifyContent: 'center',
     },
     greetingText: {
-        fontSize: 18,
-        color: '#333',
+        fontSize: 20,
+        color: '#555',
     },
     nameText: {
-        fontSize: 20,
-        color: '#333',
-        fontWeight: 'bold',
+        fontSize: 24,
+        color: '#222',
+        fontWeight: '700',
     },
-    button: {
-        backgroundColor: '#007BFF',
-        padding: 10,
-        borderRadius: 5,
+    notificationsContainer: {
+        backgroundColor: '#ffffff',
+        borderRadius: 15,
+        padding: 15,
+        marginBottom: 20,
+        width: '100%',
+        maxWidth: 400,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
         marginBottom: 10,
+        color: '#333',
+    },
+    notificationItem: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+        paddingVertical: 10,
+    },
+    notificationMessage: {
+        fontSize: 16,
+        color: '#555',
+    },
+    notificationTime: {
+        fontSize: 12,
+        color: '#888',
+    },
+    statisticsContainer: {
+        backgroundColor: '#ffffff',
+        borderRadius: 15,
+        padding: 15,
+        marginBottom: 20,
+        width: '100%',
+        maxWidth: 400,
+    },
+    statisticsList: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    statItem: {
+        alignItems: 'center',
+    },
+    statLabel: {
+        fontSize: 14,
+        color: '#555',
+    },
+    statValue: {
+        fontSize: 18,
+        color: '#222',
+        fontWeight: '700',
+    },
+    menuContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+    },
+    menuButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#007BFF',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        elevation: 3,
     },
     buttonText: {
-        color: '#FFF',
+        color: '#ffffff',
         fontSize: 16,
+        fontWeight: '500',
+        marginLeft: 10,
     },
 });
