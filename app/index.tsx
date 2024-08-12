@@ -85,6 +85,14 @@ export default function HomeScreen() {
                     <MaterialCommunityIcons name="soccer" size={24} color="#ffffff" />
                     <Text style={styles.buttonText}>Team</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.menuButton}
+                    onPress={() => router.push('/calendar')}
+                >
+                    <MaterialCommunityIcons name="calendar" size={24} color="#ffffff" />
+                    <Text style={styles.buttonText}>Calendar</Text>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     );

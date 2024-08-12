@@ -29,6 +29,11 @@ export default function Layout() {
                 name="team"
                 options={{ title: 'Team' }}
             />
+            <Stack.Screen
+                name="calendar"
+                options={{ title: 'Calendar' }}
+            />
+
             <Stack.Screen name="login" options={{ title: 'Login' }} />
         </Stack>
     );
