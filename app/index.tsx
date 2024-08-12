@@ -74,7 +74,7 @@ export default function HomeScreen() {
                     style={styles.menuButton}
                     onPress={() => router.push('/team')}
                 >
-                    <MaterialCommunityIcons name="soccer" size={24} color="#ffffff" />
+                    <MaterialCommunityIcons name="account-group" size={24} color="#ffffff" />
                     <Text style={styles.buttonText}>Team</Text>
                 </TouchableOpacity>
 
@@ -90,7 +90,7 @@ export default function HomeScreen() {
                     style={styles.menuButton}
                     onPress={() => router.push('/fields')}
                 >
-                    <MaterialCommunityIcons name="engine" size={24} color="#ffffff" />
+                    <MaterialCommunityIcons name="soccer" size={24} color="#ffffff" />
                     <Text style={styles.buttonText}>Fields</Text>
                 </TouchableOpacity>
 
