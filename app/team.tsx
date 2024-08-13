@@ -20,7 +20,13 @@ const players: Player[] = [
     { id: '4', name: 'Maria Gomes', position: 'Atacante', image: require('../assets/images/profile.png'), isCaptain: false, age: 23, nationality: 'Argentinian' },
 ];
 
-const teamName = 'FieldChamps';
+const teamStats = {
+    wins: 4,
+    ties: 3,
+    losses: 2,
+};
+
+const teamName = 'Equipa do Multi';
 
 const TeamScreen: React.FC = () => {
     const router = useRouter();
@@ -40,6 +46,29 @@ const TeamScreen: React.FC = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.header}>{teamName}</Text>
+
+            {/* Estatísticas da Equipa */}
+            <View style={styles.statsContainer}>
+                <View style={styles.statItem}>
+                    <View style={styles.statCircleGreen}>
+                        <Text style={styles.statNumber}>{teamStats.wins}</Text>
+                    </View>
+                    <Text style={styles.statLabel}>wins</Text>
+                </View>
+                <View style={styles.statItem}>
+                    <View style={styles.statCircleYellow}>
+                        <Text style={styles.statNumber}>{teamStats.ties}</Text>
+                    </View>
+                    <Text style={styles.statLabel}>ties</Text>
+                </View>
+                <View style={styles.statItem}>
+                    <View style={styles.statCircleRed}>
+                        <Text style={styles.statNumber}>{teamStats.losses}</Text>
+                    </View>
+                    <Text style={styles.statLabel}>losses</Text>
+                </View>
+            </View>
+
             <FlatList
                 data={players}
                 keyExtractor={(item) => item.id}
@@ -190,6 +219,59 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontSize: 16,
         fontWeight: '600',
+    },
+    statsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 20,
+    },
+    statItem: {
+        alignItems: 'center',
+    },
+    statCircleGreen: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        borderWidth: 8, // Increased border width
+        borderColor: '#4caf50',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 5,
+        backgroundColor: 'transparent',
+    },
+    statCircleYellow: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        borderWidth: 8, // Increased border width
+        borderColor: '#ffeb3b',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 5,
+        backgroundColor: 'transparent',
+    },
+    statCircleRed: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        borderWidth: 8, // Increased border width
+        borderColor: '#f44336',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 5,
+        backgroundColor: 'transparent',
+    },
+    statNumber: {
+        fontSize: 20,
+        color: '#000000',
+        fontWeight: 'bold',
+        textAlign: 'center', // Center text horizontally
+        textAlignVertical: 'center', // Center text vertically for Android
+        lineHeight: 60, // Match the height of the circle for vertical centering
+    },
+    statLabel: {
+        fontSize: 16,
+        color: '#6c757d',
     },
 });
 

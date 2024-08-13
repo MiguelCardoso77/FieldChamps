@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { firestore } from '@/firebaseConfig';
+import { doc, setDoc } from '@react-native-firebase/firestore';
 
 export default function Edit() {
     const navigation = useNavigation();
@@ -9,10 +11,21 @@ export default function Edit() {
     const [email, setEmail] = useState('miguel@example.com');
     const [image, setImage] = useState(require('../assets/images/profile.png'));
 
-    const handleSave = () => {
-        // Lógica para salvar as alterações do perfil
-        console.log('Profile updated:', { name, email });
-        navigation.goBack(); // Retorna à tela de perfil
+    const handleSave = async () => {
+        try {
+            // Definir o documento de usuário com o ID do usuário (pode ser o email ou outro ID único)
+            await setDoc(doc(firestore, "users", email), {
+                name: name,
+                email: email,
+                // Se a imagem fosse salva no storage, você armazenaria a URL aqui
+                image: 'profile_image_url_placeholder',
+            });
+
+            console.log('Profile updated:', { name, email });
+            navigation.goBack(); // Retorna à tela de perfil
+        } catch (error) {
+            console.error("Error saving user data: ", error);
+        }
     };
 
     return (
