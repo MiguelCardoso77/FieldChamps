@@ -3,7 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import Checkbox from 'expo-checkbox';
 import { useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/firebaseConfig';
+import { auth, firestore } from '@/firebaseConfig';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function RegisterScreen() {
     const router = useRouter();
@@ -16,13 +17,29 @@ export default function RegisterScreen() {
 
     const handleRegister = async () => {
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
+            // Cria o usuário com Firebase Authentication
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // Navega para a tela inicial imediatamente
             router.push('/home');
+
+            // Cria um novo documento no Firestore com os detalhes do usuário em segundo plano
+            setDoc(doc(firestore, 'users', user.uid), {
+                name,
+                surname,
+                email,
+                subscribeNewsletter,
+            }).catch(error => {
+                console.error("Erro ao armazenar dados do usuário: ", error.message);
+            });
+
         } catch (error) {
             // @ts-ignore
-            console.error(error.message);
+            console.error("Error creating user: ", error.message);
         }
     };
+
 
     return (
         <View style={styles.container}>
