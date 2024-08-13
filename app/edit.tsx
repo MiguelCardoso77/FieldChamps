@@ -3,26 +3,39 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'reac
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { firestore } from '@/firebaseConfig';
-import { doc, setDoc } from '@react-native-firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function Edit() {
     const navigation = useNavigation();
     const [name, setName] = useState('Miguel Cardoso');
     const [email, setEmail] = useState('miguel@example.com');
+    const [phoneCode, setPhoneCode] = useState('+351');
+    const [phone, setPhone] = useState('123456789');
+    const [gender, setGender] = useState('Masculino');
+    const [birthDate, setBirthDate] = useState('01/01/1990');
+    const [description, setDescription] = useState('Descrição do perfil');
+    const [country, setCountry] = useState('Portugal');
     const [image, setImage] = useState(require('../assets/images/profile.png'));
 
     const handleSave = async () => {
         try {
+            navigation.goBack();
+
             // Definir o documento de usuário com o ID do usuário (pode ser o email ou outro ID único)
             await setDoc(doc(firestore, "users", email), {
-                name: name,
-                email: email,
-                // Se a imagem fosse salva no storage, você armazenaria a URL aqui
+                name,
+                email,
+                phoneCode,
+                phone,
+                gender,
+                birthDate,
+                description,
+                country,
                 image: 'profile_image_url_placeholder',
             });
 
             console.log('Profile updated:', { name, email });
-            navigation.goBack(); // Retorna à tela de perfil
+
         } catch (error) {
             console.error("Error saving user data: ", error);
         }
@@ -43,7 +56,7 @@ export default function Edit() {
                 style={styles.input}
                 value={name}
                 onChangeText={setName}
-                placeholder="Name"
+                placeholder="Nome e Apelido"
             />
             <TextInput
                 style={styles.input}
@@ -51,6 +64,46 @@ export default function Edit() {
                 onChangeText={setEmail}
                 placeholder="Email"
                 keyboardType="email-address"
+            />
+            <View style={styles.inputRow}>
+                <TouchableOpacity
+                    style={[styles.input, styles.inputHalf]}
+                    onPress={() => (true)}
+                >
+                    <Text style={styles.text}>{phoneCode}</Text>
+                </TouchableOpacity>
+                <TextInput
+                    style={[styles.input, styles.inputHalf]}
+                    value={phone}
+                    onChangeText={setPhone}
+                    placeholder="Telefone"
+                />
+            </View>
+            <TextInput
+                style={styles.input}
+                value={gender}
+                onChangeText={setGender}
+                placeholder="Género"
+            />
+            <TextInput
+                style={styles.input}
+                value={birthDate}
+                onChangeText={setBirthDate}
+                placeholder="Data de Nascimento"
+            />
+            <TextInput
+                style={styles.input}
+                value={description}
+                onChangeText={setDescription}
+                placeholder="Descrição"
+                multiline
+                numberOfLines={4}
+            />
+            <TextInput
+                style={styles.input}
+                value={country}
+                onChangeText={setCountry}
+                placeholder="País de Residência"
             />
             <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
                 <Text style={styles.saveButtonText}>Save</Text>
@@ -76,6 +129,7 @@ const styles = StyleSheet.create({
     profileImageContainer: {
         alignItems: 'center',
         marginBottom: 20,
+        position: 'relative',
     },
     profileImage: {
         width: 120,
@@ -106,6 +160,19 @@ const styles = StyleSheet.create({
         fontSize: 16,
         borderColor: '#ddd',
         borderWidth: 1,
+    },
+    inputRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 15,
+    },
+    inputHalf: {
+        flex: 1,
+        marginRight: 10,
+    },
+    text: {
+        fontSize: 16,
+        color: '#333',
     },
     saveButton: {
         backgroundColor: '#007BFF',

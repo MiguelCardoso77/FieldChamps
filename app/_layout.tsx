@@ -53,6 +53,14 @@ export default function Layout() {
                 name="register"
                 options={{ title: 'Register',  headerShown: false, }}
             />
+            <Stack.Screen
+                name="selectPhoneCode"
+                options={{ title: 'Select Phone Code',  headerShown: false, }}
+            />
+            <Stack.Screen
+                name="edit"
+                options={{ title: 'Edit',  headerShown: false, }}
+            />
 
         </Stack>
     );
