@@ -1,59 +1,59 @@
 import React from 'react';
 import { Stack } from 'expo-router';
 
-// Definindo opções padrão para as telas
 const screenOptions = {
     headerStyle: {
-        backgroundColor: '#9fdc00', // Cor de fundo do cabeçalho
+        backgroundColor: '#9fdc00',
     },
-    headerTintColor: '#FFF', // Cor do texto do cabeçalho
+    headerTintColor: '#FFF',
     headerTitleStyle: {
         fontWeight: 'bold',
     },
 };
 
 export default function Layout() {
+
     return (
-        <Stack
-            screenOptions={screenOptions} // Aplicando opções padrão para todas as telas
-        >
+        // @ts-ignore
+        <Stack screenOptions={screenOptions} >
 
             <Stack.Screen
                 name="index"
-                options={{ title: 'FieldChamps' }}
+                options={{ title: 'FieldChamps',  headerShown: false, }}
             />
             <Stack.Screen
                 name="home"
-                options={{ title: 'Home' }}
+                options={{ title: 'Home',  headerShown: false, }}
             />
             <Stack.Screen
                 name="profile"
-                options={{ title: 'Profile' }}
+                options={{ title: 'Profile',  headerShown: false, }}
             />
             <Stack.Screen
                 name="team"
-                options={{ title: 'Team' }}
+                options={{ title: 'Team',  headerShown: false, }}
             />
             <Stack.Screen
                 name="calendar"
-                options={{ title: 'Calendar' }}
+                options={{ title: 'Calendar',  headerShown: false, }}
             />
             <Stack.Screen
                 name="fields"
-                options={{ title: 'Fields' }}
+                options={{ title: 'Fields',  headerShown: false, }}
             />
             <Stack.Screen
                 name="settings"
-                options={{ title: 'Settings' }}
+                options={{ title: 'Settings',  headerShown: false, }}
             />
             <Stack.Screen
                 name="login"
-                options={{ title: 'Login' }}
+                options={{ title: 'Login',  headerShown: false, }}
             />
             <Stack.Screen
                 name="register"
-                options={{ title: 'Register' }}
+                options={{ title: 'Register',  headerShown: false, }}
             />
+
         </Stack>
     );
 }
