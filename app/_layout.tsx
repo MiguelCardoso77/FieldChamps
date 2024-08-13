@@ -17,9 +17,14 @@ export default function Layout() {
         <Stack
             screenOptions={screenOptions} // Aplicando opções padrão para todas as telas
         >
+
             <Stack.Screen
                 name="index"
                 options={{ title: 'FieldChamps' }}
+            />
+            <Stack.Screen
+                name="home"
+                options={{ title: 'Home' }}
             />
             <Stack.Screen
                 name="profile"
@@ -41,8 +46,14 @@ export default function Layout() {
                 name="settings"
                 options={{ title: 'Settings' }}
             />
-
-            <Stack.Screen name="login" options={{ title: 'Login' }} />
+            <Stack.Screen
+                name="login"
+                options={{ title: 'Login' }}
+            />
+            <Stack.Screen
+                name="register"
+                options={{ title: 'Register' }}
+            />
         </Stack>
     );
 }

@@ -14,7 +14,7 @@ export default function NavigationBar({ selected }: NavigationBarProps) {
         <View style={styles.menuContainer}>
             <TouchableOpacity
                 style={styles.menuButton}
-                onPress={() => router.push('/profile')}
+                onPress={() => router.push('/home')}
             >
                 <MaterialCommunityIcons name={selected === 'home' ? 'home' : 'home-outline'} size={32} color="#ffffff" />
             </TouchableOpacity>
