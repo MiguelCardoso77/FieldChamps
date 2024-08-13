@@ -4,7 +4,7 @@ import { Stack } from 'expo-router';
 // Definindo opções padrão para as telas
 const screenOptions = {
     headerStyle: {
-        backgroundColor: '#007BFF', // Cor de fundo do cabeçalho
+        backgroundColor: '#9fdc00', // Cor de fundo do cabeçalho
     },
     headerTintColor: '#FFF', // Cor do texto do cabeçalho
     headerTitleStyle: {
