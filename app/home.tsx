@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-import { useRouter } from 'expo-router';
+import { ScrollView, View, Text, Image, FlatList, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigationBar from "@/app/NavigationBar";
 import TopBar from "./TopBar";
@@ -19,44 +18,35 @@ const statistics = [
     { id: '3', label: 'Assists', value: '8' },
 ];
 
-const screen = 'home';
-
 export default function HomeScreen() {
-    const router = useRouter();
-
     const [selected, setSelected] = useState('home');
-
-    const handlePress = (screen: string) => {
-        setSelected(screen);
-        //router.push(`/${screen}`);
-    };
 
     return (
         <View style={styles.container}>
             {/* Top Bar */}
             <TopBar level={5} />
 
-            <ScrollView contentContainerStyle={styles.contentContainer}>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
                 {/* Header */}
                 <View style={styles.header}>
                     <Text style={styles.headerText}>Welcome</Text>
                     <MaterialCommunityIcons name="account-circle" size={40} color="#007BFF" />
                 </View>
 
-                {/* Profile Container */}
-                <View style={styles.profileContainer}>
+                {/* Profile Section */}
+                <View style={styles.profileSection}>
                     <Image
                         source={require('../assets/images/profile.png')}
                         style={styles.profileImage}
                     />
-                    <View style={styles.textContainer}>
+                    <View style={styles.profileTextContainer}>
                         <Text style={styles.greetingText}>Hello,</Text>
-                        <Text style={styles.nameText}>{userName}</Text>
+                        <Text style={styles.userName}>{userName}</Text>
                     </View>
                 </View>
 
                 {/* Notifications Section */}
-                <View style={styles.notificationsContainer}>
+                <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Notifications</Text>
                     <FlatList
                         data={notifications}
@@ -71,9 +61,9 @@ export default function HomeScreen() {
                 </View>
 
                 {/* Statistics Section */}
-                <View style={styles.statisticsContainer}>
+                <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Statistics</Text>
-                    <View style={styles.statisticsList}>
+                    <View style={styles.statsContainer}>
                         {statistics.map(stat => (
                             <View key={stat.id} style={styles.statItem}>
                                 <Text style={styles.statLabel}>{stat.label}</Text>
@@ -85,7 +75,7 @@ export default function HomeScreen() {
             </ScrollView>
 
             {/* Navigation Bar */}
-            <NavigationBar selected="home" />
+            <NavigationBar selected={selected} />
         </View>
     );
 }
@@ -93,91 +83,82 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#f8f8f8',
     },
-    contentContainer: {
+    scrollContainer: {
         flexGrow: 1,
-        paddingBottom: 60, // Ensure there's space at the bottom for the NavigationBar
+        paddingHorizontal: 20,
+        paddingBottom: 70, // Space for the NavigationBar
+        paddingTop: 60,    // Space for the TopBar
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 20,
+        marginVertical: 20,
     },
     headerText: {
-        fontSize: 24,
-        fontWeight: 'bold',
+        fontSize: 26,
+        fontWeight: '700',
         color: '#333',
     },
-    profileContainer: {
+    profileSection: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 30,
         padding: 20,
-        backgroundColor: '#ffffff',
-        borderRadius: 15,
-        shadowColor: '#000000',
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 5,
-        width: '100%',
-        maxWidth: 400,
     },
     profileImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        marginRight: 20,
+        width: 90,
+        height: 90,
+        borderRadius: 45,
+        marginRight: 15,
     },
-    textContainer: {
+    profileTextContainer: {
         justifyContent: 'center',
     },
     greetingText: {
-        fontSize: 20,
-        color: '#555',
+        fontSize: 18,
+        color: '#777',
     },
-    nameText: {
-        fontSize: 24,
+    userName: {
+        fontSize: 22,
         color: '#222',
         fontWeight: '700',
     },
-    notificationsContainer: {
-        backgroundColor: '#ffffff',
-        borderRadius: 15,
+    section: {
+        backgroundColor: '#fff',
+        borderRadius: 12,
         padding: 15,
         marginBottom: 20,
-        width: '100%',
-        maxWidth: 400,
     },
     sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize: 20,
+        fontWeight: '600',
         marginBottom: 10,
         color: '#333',
     },
     notificationItem: {
         borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
+        borderBottomColor: '#eee',
         paddingVertical: 10,
     },
     notificationMessage: {
         fontSize: 16,
-        color: '#555',
+        color: '#444',
     },
     notificationTime: {
         fontSize: 12,
-        color: '#888',
+        color: '#999',
     },
-    statisticsContainer: {
-        backgroundColor: '#ffffff',
-        borderRadius: 15,
-        padding: 15,
-        marginBottom: 20,
-        width: '100%',
-        maxWidth: 400,
-    },
-    statisticsList: {
+    statsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
@@ -186,10 +167,10 @@ const styles = StyleSheet.create({
     },
     statLabel: {
         fontSize: 14,
-        color: '#555',
+        color: '#666',
     },
     statValue: {
-        fontSize: 18,
+        fontSize: 20,
         color: '#222',
         fontWeight: '700',
     },

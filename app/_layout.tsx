@@ -3,7 +3,7 @@ import { Stack } from 'expo-router';
 
 const screenOptions = {
     headerStyle: {
-        backgroundColor: '#9fdc00',
+        backgroundColor: '#221F1F',
     },
     headerTintColor: '#FFF',
     headerTitleStyle: {

@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import NavigationBar from "@/app/NavigationBar";
+import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import NavigationBar from "@/app/NavigationBar"; // Atualizado para navegação
 
 const userProfile = {
     name: 'Miguel Cardoso',
@@ -10,18 +12,24 @@ const userProfile = {
 };
 
 export default function ProfileScreen() {
+    const navigation = useNavigation();
+
     const handleEditProfile = () => {
-        // Lógica para editar perfil
-        console.log('Edit Profile pressed');
+        navigation.navigate('edit'); // Navega para a tela de edição
     };
 
     return (
         <View style={styles.container}>
-            <View style={styles.profileHeader}>
-                <Image source={userProfile.image} style={styles.profileImage} />
-                <Text style={styles.profileName}>{userProfile.name}</Text>
-                <Text style={styles.profileEmail}>{userProfile.email}</Text>
-            </View>
+            <LinearGradient
+                colors={['#007BFF', '#00aaff']}
+                style={styles.headerGradient}
+            >
+                <View style={styles.profileHeader}>
+                    <Image source={userProfile.image} style={styles.profileImage} />
+                    <Text style={styles.profileName}>{userProfile.name}</Text>
+                    <Text style={styles.profileEmail}>{userProfile.email}</Text>
+                </View>
+            </LinearGradient>
 
             <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
                 <MaterialCommunityIcons name="pencil" size={20} color="#fff" />
@@ -40,39 +48,37 @@ const styles = StyleSheet.create({
         backgroundColor: '#f5f5f5',
         padding: 20,
     },
-    contentContainer: {
-        flexGrow: 1,
-        paddingBottom: 60,
+    headerGradient: {
+        padding: 20,
+        borderRadius: 15,
+        marginBottom: 30,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 5,
     },
     profileHeader: {
         alignItems: 'center',
-        marginBottom: 30,
-        padding: 20,
-        backgroundColor: '#ffffff',
-        borderRadius: 15,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 5,
-        alignSelf: 'center',
-        width: '100%',
-        maxWidth: 400,
     },
     profileImage: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
+        width: 130,
+        height: 130,
+        borderRadius: 65,
         marginBottom: 15,
+        borderWidth: 3,
+        borderColor: '#fff',
     },
     profileName: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#fff',
+        marginBottom: 5,
     },
     profileEmail: {
-        fontSize: 16,
-        color: '#666',
+        fontSize: 18,
+        color: '#e0e0e0',
         marginBottom: 20,
     },
     editButton: {
@@ -86,7 +92,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.3,
         shadowRadius: 5,
         elevation: 3,
     },
@@ -97,3 +103,4 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
 });
+
