@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -16,6 +16,11 @@ export default function RegisterScreen() {
     const [acceptTermsConditions, setAcceptTermsConditions] = useState(false);
 
     const handleRegister = async () => {
+        if (!acceptTermsConditions) {
+            Alert.alert("Erro", "Você deve aceitar os Termos e Condições para se registrar.");
+            return;
+        }
+
         try {
             // Cria o usuário com Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -38,6 +43,11 @@ export default function RegisterScreen() {
             // @ts-ignore
             console.error("Error creating user: ", error.message);
         }
+    };
+
+    const handleNavigation = (path: string) => {
+        // @ts-ignore
+        router.push(`/${path}`);
     };
 
 
@@ -102,6 +112,10 @@ export default function RegisterScreen() {
 
             <Text style={styles.orText}>ou</Text>
 
+            <TouchableOpacity style={styles.googleButton} onPress={() => {/* Handle Google login */}}>
+                <Text style={styles.googleButtonText}>Iniciar sessão com Google</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.facebookButton} onPress={() => { /* Handle Facebook login */ }}>
                 <Text style={styles.facebookButtonText}>Iniciar sessão com Facebook</Text>
             </TouchableOpacity>
@@ -109,9 +123,12 @@ export default function RegisterScreen() {
             <Text style={styles.termsText}>
                 Ao continuares, aceitas os nossos Termos e Condições e a Política de Privacidade.
             </Text>
-            <Text style={styles.footerText}>
-                Já tens uma conta? Inicia sessão
-            </Text>
+
+            <TouchableOpacity onPress={() => handleNavigation('login')}>
+                <Text style={styles.footerText}>
+                    Já tens uma conta? Inicia sessão
+                </Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -165,6 +182,16 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         textAlign: 'center',
         marginVertical: 10,
+    },
+    googleButton: {
+        backgroundColor: '#db4437', // Cor do botão do Google
+        padding: 12,
+        alignItems: 'center',
+        borderRadius: 4,
+    },
+    googleButtonText: {
+        color: '#ffffff',
+        fontSize: 16,
     },
     facebookButton: {
         backgroundColor: '#1877F2', // Cor do botão do Facebook
