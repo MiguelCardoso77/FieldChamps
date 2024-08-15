@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import NavigationBar from "@/app/NavigationBar";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground } from 'react-native';
 
 const group = {
-    name: 'so os craques',
-    president: 'craquebarca',
+    name: 'Multi FC',  // Group name updated to match the image
+    president: 'Multizao',  // President updated to match the image
     balance: 0,
     nextGame: {
         date: '08',
@@ -12,10 +13,11 @@ const group = {
         status: 'VOCÊ ESTÁ DENTRO',
     },
     bestPlayer: {
-        name: 'craquebarca',
-        position: 'ZAG',
-        image: require('../assets/images/profile.png'), // Substitua pelo caminho real da imagem
+        name: 'Maria Silva',  // Best player name updated to match the image
+        position: 'ATA',
+        image: require('../assets/images/profile.png'), // Update to the actual path of the image
     },
+    backgroundImage: require('../assets/images/wallpaper5.jpg'), // Update to the actual path of the background image
 };
 
 const GroupScreen: React.FC = () => {
@@ -34,33 +36,39 @@ const GroupScreen: React.FC = () => {
                 </View>
             </View>
 
-            {/* Cabeçalho do Grupo */}
+            {/* Cabeçalho do Grupo com imagem de fundo */}
             <View style={styles.groupHeader}>
-                <Text style={styles.groupName}>{group.name}</Text>
-                <Text style={styles.president}>Presidente: {group.president}</Text>
+                <ImageBackground source={group.backgroundImage} style={styles.backgroundImage}>
+                    <Text style={styles.groupName}>{group.name}</Text>
+                    <Text style={styles.president}>Presidente: {group.president}</Text>
+                </ImageBackground>
             </View>
 
-            {/* Melhor Jogador */}
-            <View style={styles.bestPlayerContainer}>
-                <Image source={group.bestPlayer.image} style={styles.playerImage} />
-                <View style={styles.playerInfo}>
-                    <Text style={styles.positionLabel}>{group.bestPlayer.position}</Text>
-                    <Text style={styles.playerName}>{group.bestPlayer.name}</Text>
+            {/* Informação do Melhor Jogador e Saldo */}
+            <View style={styles.infoContainer}>
+                <View style={styles.bestPlayerContainer}>
+                    <Image source={group.bestPlayer.image} style={styles.playerImage} />
+                    <View style={styles.playerDetails}>
+                        <Text style={styles.playerPosition}>{group.bestPlayer.position}</Text>
+                        <Text style={styles.playerName}>{group.bestPlayer.name}</Text>
+                    </View>
                 </View>
-                <Text style={styles.balance}>${group.balance.toFixed(2)}</Text>
+                <Text style={styles.balance}>Saldo da Carteira: ${group.balance.toFixed(2)}</Text>
             </View>
 
             {/* Próximo Jogo */}
             <View style={styles.nextGameContainer}>
-                <Text style={styles.nextGameDate}>{group.nextGame.date}</Text>
-                <View style={styles.nextGameInfo}>
-                    <Text style={styles.nextGameDay}>{group.nextGame.day}</Text>
-                    <Text style={styles.nextGameTime}>{group.nextGame.time}</Text>
-                </View>
+                <Text style={styles.nextGameTitle}>Melhores</Text>
+                <Text style={styles.nextGameDetails}>
+                    {group.nextGame.day} • {group.nextGame.time}
+                </Text>
                 <TouchableOpacity style={styles.statusButton}>
                     <Text style={styles.statusText}>{group.nextGame.status}</Text>
                 </TouchableOpacity>
             </View>
+
+            {/* Barra de Navegação */}
+            <NavigationBar selected="calendar" />
         </View>
     );
 };
@@ -68,7 +76,7 @@ const GroupScreen: React.FC = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#111111',
+        backgroundColor: '#1A1717',
         padding: 15,
     },
     headerContainer: {
@@ -85,7 +93,7 @@ const styles = StyleSheet.create({
     createGroupContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 3
+        marginTop: 3,
     },
     createGroupText: {
         fontSize: 12,
@@ -111,95 +119,94 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#9fdc00',
         textAlign: 'center',
-        includeFontPadding: false, // Para garantir que não há preenchimento extra ao redor do texto
+        includeFontPadding: false,
     },
     groupHeader: {
         backgroundColor: '#3E4C59',
-        padding: 15,
         borderRadius: 10,
         marginBottom: 15,
+        overflow: 'hidden',
+    },
+    backgroundImage: {
+        width: '100%',
+        height: 150,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     groupName: {
         fontSize: 24,
         fontWeight: 'bold',
         color: '#FFFFFF',
+        position: 'absolute',  // Posição absoluta para poder ajustar o posicionamento dentro da imagem
+        bottom: 35,  // Distância da parte inferior da imagem
+        left: 10,  // Distância do lado esquerdo da imagem
     },
     president: {
         fontSize: 16,
         color: '#AAB2BB',
-        marginTop: 5,
+        position: 'absolute',  // Posição absoluta para poder ajustar o posicionamento dentro da imagem
+        bottom: 15,  // Distância da parte inferior da imagem
+        left: 10,  // Distância do lado esquerdo da imagem
+    },
+
+    infoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
     },
     bestPlayerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#232A33',
-        padding: 15,
-        borderRadius: 10,
-        marginBottom: 15,
     },
     playerImage: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        marginRight: 15,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
     },
-    playerInfo: {
-        flex: 1,
+    playerDetails: {
+        marginLeft: 10,
     },
-    positionLabel: {
-        fontSize: 14,
-        color: '#AAB2BB',
+    playerPosition: {
+        fontSize: 12,
+        color: '#9fdc00',
         fontWeight: 'bold',
-        backgroundColor: '#44D62C',
-        paddingVertical: 3,
-        paddingHorizontal: 8,
-        borderRadius: 5,
-        marginBottom: 5,
-        overflow: 'hidden',
     },
     playerName: {
-        fontSize: 18,
+        fontSize: 16,
         color: '#FFFFFF',
     },
     balance: {
         fontSize: 16,
-        fontWeight: 'bold',
-        color: '#44D62C',
+        color: '#FFFFFF',
     },
     nextGameContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#232A33',
-        padding: 15,
+        backgroundColor: '#3A3636',
         borderRadius: 10,
+        padding: 15,
+        marginBottom: 15,
     },
-    nextGameDate: {
-        fontSize: 36,
+    nextGameTitle: {
+        fontSize: 18,
+        color: '#FFFFFF',
         fontWeight: 'bold',
-        color: '#FFFFFF',
-        marginRight: 20,
     },
-    nextGameInfo: {
-        flex: 1,
-    },
-    nextGameDay: {
-        fontSize: 16,
+    nextGameDetails: {
+        fontSize: 14,
         color: '#AAB2BB',
-    },
-    nextGameTime: {
-        fontSize: 16,
-        color: '#FFFFFF',
+        marginTop: 5,
     },
     statusButton: {
-        backgroundColor: '#44D62C',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
+        marginTop: 10,
+        paddingVertical: 5,
+        paddingHorizontal: 15,
+        backgroundColor: '#9fdc00',
         borderRadius: 5,
     },
     statusText: {
-        fontSize: 16,
+        fontSize: 14,
+        color: '#000000',
         fontWeight: 'bold',
-        color: '#FFFFFF',
     },
 });
 
