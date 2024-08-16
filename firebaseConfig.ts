@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from "@firebase/firestore";
+import { getDatabase } from "@firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDR0QjoLrdLpGZvk1YvfzyzI-oZXEPwh5I",
@@ -8,12 +8,13 @@ const firebaseConfig = {
     projectId: "fieldchamps",
     storageBucket: "fieldchamps.appspot.com",
     messagingSenderId: "822457382832",
-    appId: "1:822457382832:android:09db97725ff2d4af478875"
+    appId: "1:822457382832:android:09db97725ff2d4af478875",
+    databaseURL: "https://fieldchamps-default-rtdb.europe-west1.firebasedatabase.app"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const firestore = getFirestore();
 const auth = getAuth(app);
+const db = getDatabase(app)
 
-export { auth };
-export { firestore };
+export { auth, db };

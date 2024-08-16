@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { useRouter } from 'expo-router';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, firestore } from '@/firebaseConfig';
-import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '@/firebaseConfig';
+import { createUserWithEmailAndPassword, UserCredential } from "firebase/auth";
+import { ref, set } from "firebase/database";
 
 export default function RegisterScreen() {
     const router = useRouter();
@@ -15,6 +15,11 @@ export default function RegisterScreen() {
     const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
     const [acceptTermsConditions, setAcceptTermsConditions] = useState(false);
 
+    const createUser = async ( response: UserCredential ) => {
+        const userId = response.user.uid;
+        await set(ref(db, `/users/${userId}`), { name });
+    }
+
     const handleRegister = async () => {
         if (!acceptTermsConditions) {
             Alert.alert("Erro", "Você deve aceitar os Termos e Condições para se registrar.");
@@ -24,20 +29,11 @@ export default function RegisterScreen() {
         try {
             // Cria o usuário com Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
 
             // Navega para a tela inicial imediatamente
             router.push('/home');
 
-            // Cria um novo documento no Firestore com os detalhes do usuário em segundo plano
-            setDoc(doc(firestore, 'users', user.uid), {
-                name,
-                surname,
-                email,
-                subscribeNewsletter,
-            }).catch(error => {
-                console.error("Erro ao armazenar dados do usuário: ", error.message);
-            });
+            await createUser(userCredential);
 
         } catch (error) {
             // @ts-ignore
