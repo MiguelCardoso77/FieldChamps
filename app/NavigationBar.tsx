@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Colors } from '@/constants/Colors';
 
 interface NavigationBarProps {
     selected: string;
@@ -12,40 +13,47 @@ export default function NavigationBar({ selected }: NavigationBarProps) {
 
     return (
         <View style={styles.menuContainer}>
-            <TouchableOpacity
+
+            { /* Home Button */ }
+            <Pressable
                 style={styles.menuButton}
                 onPress={() => router.push('/home')}
             >
                 <MaterialCommunityIcons name={selected === 'home' ? 'home' : 'home-outline'} size={32} color="#ffffff" />
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity
+            { /* Team Button */ }
+            <Pressable
                 style={styles.menuButton}
                 onPress={() => router.push('/team')}
             >
                 <MaterialCommunityIcons name={selected === 'team' ? 'account-group' : 'account-group-outline'} size={32} color="#ffffff" />
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity
+            { /* Fields Button */ }
+            <Pressable
                 style={styles.menuButton}
                 onPress={() => router.push('/fields')}
             >
                 <MaterialCommunityIcons name={selected === 'fields' ? 'soccer-field' : 'soccer'} size={32} color="#ffffff" />
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity
+            { /* Calendar Button */ }
+            <Pressable
                 style={styles.menuButton}
                 onPress={() => router.push('/calendar')}
             >
-                <MaterialCommunityIcons name={selected === 'calendar' ? 'calendar' : 'calendar-outline'} size={32} color="#ffffff" />
-            </TouchableOpacity>
+                <MaterialCommunityIcons name={selected === 'calendar' ? 'calendar' : 'calendar-blank'} size={32} color="#ffffff" />
+            </Pressable>
 
-            <TouchableOpacity
+            { /* Profile Button */ }
+            <Pressable
                 style={styles.menuButton}
                 onPress={() => router.push('/profile')}
             >
                 <MaterialCommunityIcons name={selected === 'profile' ? 'account' : 'account-outline'} size={32} color="#ffffff" />
-            </TouchableOpacity>
+            </Pressable>
+
         </View>
     );
 }
@@ -55,7 +63,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        backgroundColor: '#0e0a18',
+        backgroundColor: Colors.dark.bars,
         paddingVertical: 12,
         position: 'absolute',
         bottom: 0,

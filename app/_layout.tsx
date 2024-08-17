@@ -1,72 +1,39 @@
 import React from 'react';
-import { Stack } from 'expo-router';
+import { Tabs } from 'expo-router';
 
-const screenOptions = {
-    headerStyle: {
-        backgroundColor: '#221F1F',
-    },
-    headerTintColor: '#FFF',
-    headerTitleStyle: {
-        fontWeight: 'bold',
-    },
+const showDevBar = {
+    tabBarStyle: { display: 'none' }
 };
 
 export default function Layout() {
 
     return (
         // @ts-ignore
-        <Stack screenOptions={screenOptions} >
+        <Tabs screenOptions={ showDevBar }>
 
-            <Stack.Screen
-                name="index"
-                options={{ title: 'FieldChamps',  headerShown: false, }}
-            />
-            <Stack.Screen
-                name="home"
-                options={{ title: 'Home',  headerShown: false, }}
-            />
-            <Stack.Screen
-                name="profile"
-                options={{ title: 'Profile',  headerShown: false, }}
-            />
-            <Stack.Screen
-                name="team"
-                options={{ title: 'Team',  headerShown: false, }}
-            />
-            <Stack.Screen
-                name="calendar"
-                options={{ title: 'Calendar',  headerShown: false, }}
-            />
-            <Stack.Screen
-                name="fields"
-                options={{ title: 'Fields',  headerShown: false, }}
-            />
-            <Stack.Screen
-                name="settings"
-                options={{ title: 'Settings',  headerShown: false, }}
-            />
-            <Stack.Screen
-                name="login"
-                options={{ title: 'Login',  headerShown: false, }}
-            />
-            <Stack.Screen
-                name="register"
-                options={{ title: 'Register',  headerShown: false, }}
-            />
-            <Stack.Screen
-                name="selectPhoneCode"
-                options={{ title: 'Select Phone Code',  headerShown: false, }}
-            />
-            <Stack.Screen
-                name="edit"
-                options={{ title: 'Edit',  headerShown: false, }}
-            />
-            <Stack.Screen
-                name="notifications"
-                options={{ title: 'Notifications',  headerShown: false, }}
-            />
+            {/* Start Screen */}
+            <Tabs.Screen name="index" options={{ title: 'FieldChamps', headerShown: false }} />
 
-        </Stack>
+            {/* Auth Screens */}
+            <Tabs.Screen name="login" options={{ title: 'Login', headerShown: false }} />
+            <Tabs.Screen name="register" options={{ title: 'Register', headerShown: false }} />
+
+            {/* App Screens */}
+            <Tabs.Screen name="home" options={{ title: 'Home', headerShown: false }} />
+            <Tabs.Screen name="team" options={{ title: 'Team', headerShown: false }} />
+            <Tabs.Screen name="fields" options={{ title: 'Fields', headerShown: false }} />
+            <Tabs.Screen name="calendar" options={{ title: 'Calendar', headerShown: false }} />
+            <Tabs.Screen name="profile" options={{ title: 'Profile', headerShown: false }} />
+
+            {/* Settings Screens */}
+            <Tabs.Screen name="notifications" options={{ title: 'Notifications', headerShown: false }} />
+            <Tabs.Screen name="settings" options={{ title: 'Settings', headerShown: false }} />
+
+            {/* Other Screens */}
+            <Tabs.Screen name="selectPhoneCode" options={{ title: 'Select Phone Code', headerShown: false }} />
+            <Tabs.Screen name="edit" options={{ title: 'Edit', headerShown: false }} />
+
+        </Tabs>
     );
 }
 

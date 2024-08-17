@@ -13,13 +13,14 @@ export default function TopBar({ level }: TopBarProps) {
     return (
         <View style={styles.topBarContainer}>
 
-            {/* Nível da conta */}
+            {/* Account Level */}
             <View style={styles.levelContainer}>
                 <Text style={styles.levelText}>Level {level}</Text>
             </View>
 
             <View style={styles.iconsContainer}>
-                {/* Botão de Notificações */}
+
+                {/* Notifications Button */}
                 <Pressable
                     style={styles.notificationButton}
                     onPress={() => router.push('/notifications')}
@@ -27,13 +28,14 @@ export default function TopBar({ level }: TopBarProps) {
                     <MaterialCommunityIcons name="bell-outline" size={28} color="#ffffff" />
                 </Pressable>
 
-                {/* Botão de Definições */}
+                {/* Settings Button */}
                 <Pressable
                     style={styles.settingsButton}
                     onPress={() => router.push('/settings')}
                 >
                     <MaterialCommunityIcons name="cog-outline" size={28} color="#ffffff" />
                 </Pressable>
+
             </View>
 
         </View>
