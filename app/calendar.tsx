@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useRouter } from 'expo-router';
 import NavigationBar from "@/app/NavigationBar";
+import TopBar from "@/app/TopBar";
 
 type DayProps = {
     dateString: string;
@@ -35,6 +36,9 @@ export default function CalendarScreen() {
 
     return (
         <View style={styles.container}>
+            {/* Top Bar */}
+            <TopBar level={5} />
+
             <Text style={styles.title}>Select a Date</Text>
             <Calendar
                 onDayPress={onDayPress}

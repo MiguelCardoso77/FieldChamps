@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Modal, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import NavigationBar from "@/app/NavigationBar";
+import TopBar from "@/app/TopBar";
 
 type Player = {
     id: string;
@@ -45,6 +46,9 @@ const TeamScreen: React.FC = () => {
 
     return (
         <View style={styles.container}>
+            {/* Top Bar */}
+            <TopBar level={5} />
+
             <Text style={styles.header}>{teamName}</Text>
 
             {/* Estatísticas da Equipa */}

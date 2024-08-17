@@ -61,6 +61,10 @@ export default function Layout() {
                 name="edit"
                 options={{ title: 'Edit',  headerShown: false, }}
             />
+            <Stack.Screen
+                name="notifications"
+                options={{ title: 'Notifications',  headerShown: false, }}
+            />
 
         </Stack>
     );

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Switch, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import NavigationBar from "@/app/NavigationBar";
+import TopBar from "@/app/TopBar";
 
 export default function SettingsScreen() {
     const router = useRouter();
@@ -12,6 +14,9 @@ export default function SettingsScreen() {
 
     return (
         <View style={styles.container}>
+            {/* Top Bar */}
+            <TopBar level={5} />
+
             <Text style={styles.header}>Settings</Text>
 
             {/* Notificações */}
@@ -35,6 +40,9 @@ export default function SettingsScreen() {
                     value={isDarkModeEnabled}
                 />
             </View>
+
+            {/* Barra de Navegação */}
+            <NavigationBar selected="profile" />
         </View>
     );
 }

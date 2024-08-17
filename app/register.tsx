@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { useRouter } from 'expo-router';
 import { auth, db } from '@/firebaseConfig';
@@ -17,7 +17,7 @@ export default function RegisterScreen() {
 
     const createUser = async ( response: UserCredential ) => {
         const userId = response.user.uid;
-        await set(ref(db, `/users/${userId}`), { name });
+        await set(ref(db, `/users/${userId}`), { name, surname, email, subscribeNewsletter});
     }
 
     const handleRegister = async () => {
@@ -102,29 +102,29 @@ export default function RegisterScreen() {
                 </Text>
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleRegister}>
+            <Pressable style={styles.button} onPress={handleRegister}>
                 <Text style={styles.buttonText}>Inscrever-me</Text>
-            </TouchableOpacity>
+            </Pressable>
 
             <Text style={styles.orText}>ou</Text>
 
-            <TouchableOpacity style={styles.googleButton} onPress={() => {/* Handle Google login */}}>
+            <Pressable style={styles.googleButton} onPress={() => {/* Handle Google login */}}>
                 <Text style={styles.googleButtonText}>Iniciar sessão com Google</Text>
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity style={styles.facebookButton} onPress={() => { /* Handle Facebook login */ }}>
+            <Pressable style={styles.facebookButton} onPress={() => { /* Handle Facebook login */ }}>
                 <Text style={styles.facebookButtonText}>Iniciar sessão com Facebook</Text>
-            </TouchableOpacity>
+            </Pressable>
 
             <Text style={styles.termsText}>
                 Ao continuares, aceitas os nossos Termos e Condições e a Política de Privacidade.
             </Text>
 
-            <TouchableOpacity onPress={() => handleNavigation('login')}>
+            <Pressable onPress={() => handleNavigation('login')}>
                 <Text style={styles.footerText}>
                     Já tens uma conta? Inicia sessão
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
         </View>
     );
 }

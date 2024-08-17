@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -18,13 +18,23 @@ export default function TopBar({ level }: TopBarProps) {
                 <Text style={styles.levelText}>Level {level}</Text>
             </View>
 
-            {/* Botão de Definições */}
-            <TouchableOpacity
-                style={styles.settingsButton}
-                onPress={() => router.push('/settings')}
-            >
-                <MaterialCommunityIcons name="cog-outline" size={28} color="#ffffff" />
-            </TouchableOpacity>
+            <View style={styles.iconsContainer}>
+                {/* Botão de Notificações */}
+                <Pressable
+                    style={styles.notificationButton}
+                    onPress={() => router.push('/notifications')}
+                >
+                    <MaterialCommunityIcons name="bell-outline" size={28} color="#ffffff" />
+                </Pressable>
+
+                {/* Botão de Definições */}
+                <Pressable
+                    style={styles.settingsButton}
+                    onPress={() => router.push('/settings')}
+                >
+                    <MaterialCommunityIcons name="cog-outline" size={28} color="#ffffff" />
+                </Pressable>
+            </View>
 
         </View>
     );
@@ -52,8 +62,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    iconsContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    notificationButton: {
+        marginRight: 15,
+    },
     settingsButton: {
-        flex: 1,
-        alignItems: 'flex-end',
+        marginLeft: 15,
     },
 });
