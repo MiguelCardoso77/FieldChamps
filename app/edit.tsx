@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { firestore } from '@/firebaseConfig';
-import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '@/firebaseConfig';
+import { ref, update } from "firebase/database";
+import { useRouter } from "expo-router";
 
 export default function Edit() {
-    const navigation = useNavigation();
-    const [name, setName] = useState('Miguel Cardoso');
+    const router = useRouter();
+    const [name, setName] = useState('Miguel');
+    const [surname, setSurname] = useState('Cardoso');
     const [email, setEmail] = useState('miguel@example.com');
     const [phoneCode, setPhoneCode] = useState('+351');
     const [phone, setPhone] = useState('123456789');
@@ -19,11 +20,11 @@ export default function Edit() {
 
     const handleSave = async () => {
         try {
-            navigation.goBack();
+            const userId = auth.currentUser?.uid;
 
-            // Definir o documento de usuário com o ID do usuário (pode ser o email ou outro ID único)
-            await setDoc(doc(firestore, "users", email), {
+            await update(ref(db, `/users/${userId}`), {
                 name,
+                surname,
                 email,
                 phoneCode,
                 phone,
@@ -35,6 +36,7 @@ export default function Edit() {
             });
 
             console.log('Profile updated:', { name, email });
+            router.push('/profile');
 
         } catch (error) {
             console.error("Error saving user data: ", error);
@@ -46,18 +48,32 @@ export default function Edit() {
             <View style={styles.header}>
                 <Text style={styles.headerText}>Edit Profile</Text>
             </View>
+
+            { /* Imagem de perfil */ }
             <View style={styles.profileImageContainer}>
                 <Image source={image} style={styles.profileImage} />
-                <TouchableOpacity style={styles.changeImageButton}>
+                <Pressable style={styles.changeImageButton}>
                     <MaterialCommunityIcons name="camera" size={24} color="#007BFF" />
-                </TouchableOpacity>
+                </Pressable>
             </View>
+
+            { /* Nome */ }
             <TextInput
                 style={styles.input}
                 value={name}
                 onChangeText={setName}
-                placeholder="Nome e Apelido"
+                placeholder="Nome"
             />
+
+            { /* Apelido */ }
+            <TextInput
+                style={styles.input}
+                value={surname}
+                onChangeText={setSurname}
+                placeholder="Apelido"
+            />
+
+            { /* Email */ }
             <TextInput
                 style={styles.input}
                 value={email}
@@ -65,13 +81,15 @@ export default function Edit() {
                 placeholder="Email"
                 keyboardType="email-address"
             />
+
+            { /* Número de telefone */ }
             <View style={styles.inputRow}>
-                <TouchableOpacity
+                <TextInput
                     style={[styles.input, styles.inputHalf]}
-                    onPress={() => (true)}
-                >
-                    <Text style={styles.text}>{phoneCode}</Text>
-                </TouchableOpacity>
+                    value={phoneCode}
+                    onChangeText={setPhoneCode}
+                    placeholder="Código País"
+                />
                 <TextInput
                     style={[styles.input, styles.inputHalf]}
                     value={phone}
@@ -79,18 +97,24 @@ export default function Edit() {
                     placeholder="Telefone"
                 />
             </View>
+
+            { /* Género */ }
             <TextInput
                 style={styles.input}
                 value={gender}
                 onChangeText={setGender}
                 placeholder="Género"
             />
+
+            { /* Data de Nascimento */ }
             <TextInput
                 style={styles.input}
                 value={birthDate}
                 onChangeText={setBirthDate}
                 placeholder="Data de Nascimento"
             />
+
+            { /* Descrição */ }
             <TextInput
                 style={styles.input}
                 value={description}
@@ -99,15 +123,20 @@ export default function Edit() {
                 multiline
                 numberOfLines={4}
             />
+
+            { /* País */ }
             <TextInput
                 style={styles.input}
                 value={country}
                 onChangeText={setCountry}
                 placeholder="País de Residência"
             />
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+
+            { /* Botão de guardar */ }
+            <Pressable style={styles.saveButton} onPress={handleSave}>
                 <Text style={styles.saveButtonText}>Save</Text>
-            </TouchableOpacity>
+            </Pressable>
+
         </View>
     );
 }
