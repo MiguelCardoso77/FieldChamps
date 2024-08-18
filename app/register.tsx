@@ -17,7 +17,39 @@ export default function RegisterScreen() {
 
     const createUser = async ( response: UserCredential ) => {
         const userId = response.user.uid;
-        await set(ref(db, `/users/${userId}`), { name, surname, email, subscribeNewsletter});
+        await set(ref(db, `/users/${userId}/profile`), {
+            name,
+            surname,
+            email,
+            phoneCountryCode: "",
+            phoneNumber: "",
+            gender: "",
+            birthDate: "",
+            description: "",
+            image: "",
+            country: "",
+        });
+
+        await set(ref(db, `/users/${userId}/stats`), {
+            gamesPlayed: 0,
+            goalsScored: 0,
+            assists: 0,
+            followers: 0,
+            following: 0
+        });
+
+        await set(ref(db, `/users/${userId}/preferences`), {
+            dominantFoot: "",
+            position: "",
+            gameType: "",
+            preferredTimes: "",
+            subscribeNewsletter,
+        });
+
+        await set(ref(db, `/users/${userId}/team`), {
+            teamId: "",
+            teamName: "",
+        });
     }
 
     const handleRegister = async () => {
@@ -41,15 +73,16 @@ export default function RegisterScreen() {
         }
     };
 
-    const handleNavigation = (path: string) => {
-        // @ts-ignore
-        router.push(`/${path}`);
+    const handleLogin = () => {
+        router.push(`/login`);
     };
 
 
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Registro</Text>
+
+            { /* Campos de registro */ }
             <TextInput
                 style={styles.input}
                 placeholder="Nome"
@@ -81,37 +114,39 @@ export default function RegisterScreen() {
                 placeholderTextColor="#d3d3d3"
             />
 
+            { /* Checkboxes */ }
             <View style={styles.checkboxContainer}>
                 <Checkbox
                     value={subscribeNewsletter}
                     onValueChange={setSubscribeNewsletter}
-                    color={subscribeNewsletter ? '#4caf50' : undefined} // Cor do checkbox quando marcado
+                    color={subscribeNewsletter ? '#4caf50' : undefined}
                 />
                 <Text style={styles.checkboxText}>
-                    Quero que me a o boletim informativo FieldChamps para me manter atualizado com as últimas notícias.
+                    Quero ser informado pela FieldChamps para me manter atualizado com as últimas notícias.
                 </Text>
             </View>
             <View style={styles.checkboxContainer}>
                 <Checkbox
                     value={acceptTermsConditions}
                     onValueChange={setAcceptTermsConditions}
-                    color={acceptTermsConditions ? '#4caf50' : undefined} // Cor do checkbox quando marcado
+                    color={acceptTermsConditions ? '#4caf50' : undefined}
                 />
                 <Text style={styles.checkboxText}>
                     Concordo com os Termos e Condições e Políticas de Privacidade.
                 </Text>
             </View>
 
+            { /* Botão de registro */ }
             <Pressable style={styles.button} onPress={handleRegister}>
                 <Text style={styles.buttonText}>Inscrever-me</Text>
             </Pressable>
 
             <Text style={styles.orText}>ou</Text>
 
+            { /* Botões de login com Google e Facebook */ }
             <Pressable style={styles.googleButton} onPress={() => {/* Handle Google login */}}>
                 <Text style={styles.googleButtonText}>Iniciar sessão com Google</Text>
             </Pressable>
-
             <Pressable style={styles.facebookButton} onPress={() => { /* Handle Facebook login */ }}>
                 <Text style={styles.facebookButtonText}>Iniciar sessão com Facebook</Text>
             </Pressable>
@@ -120,11 +155,13 @@ export default function RegisterScreen() {
                 Ao continuares, aceitas os nossos Termos e Condições e a Política de Privacidade.
             </Text>
 
-            <Pressable onPress={() => handleNavigation('login')}>
+            { /* Link para a tela de login */ }
+            <Pressable onPress={() => handleLogin()}>
                 <Text style={styles.footerText}>
                     Já tens uma conta? Inicia sessão
                 </Text>
             </Pressable>
+
         </View>
     );
 }
@@ -134,7 +171,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         padding: 16,
-        backgroundColor: '#0a1f44', // Fundo semelhante ao da imagem
+        backgroundColor: '#0a1f44',
     },
     header: {
         fontSize: 24,
@@ -149,7 +186,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         paddingHorizontal: 8,
         color: '#ffffff',
-        backgroundColor: '#142b5e', // Fundo de input escuro
+        backgroundColor: '#142b5e',
         borderRadius: 5,
     },
     checkboxContainer: {
@@ -164,7 +201,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     button: {
-        backgroundColor: '#4caf50', // Cor do botão "Inscrever-me"
+        backgroundColor: '#4caf50',
         padding: 12,
         alignItems: 'center',
         borderRadius: 4,
@@ -180,7 +217,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     googleButton: {
-        backgroundColor: '#db4437', // Cor do botão do Google
+        backgroundColor: '#db4437',
         padding: 12,
         alignItems: 'center',
         borderRadius: 4,
@@ -190,7 +227,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     facebookButton: {
-        backgroundColor: '#1877F2', // Cor do botão do Facebook
+        backgroundColor: '#1877F2',
         padding: 12,
         alignItems: 'center',
         borderRadius: 4,
@@ -206,7 +243,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     footerText: {
-        color: '#4caf50', // Cor do link para iniciar sessão
+        color: '#4caf50',
         fontSize: 14,
         textAlign: 'center',
         marginTop: 20,

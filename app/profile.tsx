@@ -1,10 +1,10 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import NavigationBar from "@/app/NavigationBar";
 import TopBar from './TopBar';
+import { useRouter } from "expo-router";
+import { auth, db } from '@/firebaseConfig';
+import { ref, get } from 'firebase/database';
 
 const userProfile = {
     name: 'Miguel Cardoso',
@@ -22,15 +22,46 @@ const userProfile = {
 };
 
 export default function ProfileScreen() {
-    const navigation = useNavigation();
+    const router = useRouter();
+    const [userProfile, setUserProfile] = useState(null);
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            const userId = auth.currentUser?.uid;
+            if (userId) {
+                try {
+                    const userRef = ref(db, `users/${userId}`);
+                    const snapshot = await get(userRef);
+                    if (snapshot.exists()) {
+                        setUserProfile(snapshot.val()); // Atualiza o estado com os dados do perfil
+                    } else {
+                        console.log("Nenhum dado encontrado para esse usuário.");
+                    }
+                } catch (error) {
+                    console.error("Erro ao buscar os dados do perfil:", error);
+                }
+            } else {
+                console.log("Usuário não autenticado.");
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
+
+    if (!userProfile) {
+        return (
+            <View style={styles.container}>
+                <Text>Carregando perfil...</Text>
+            </View>
+        );
+    }
 
     const handleEditProfile = () => {
-        // @ts-ignore
-        navigation.navigate('edit'); // Navega para a tela de edição
+        router.push('/edit');
     };
 
     const handleBecomePremium = () => {
-        // Lógica para se tornar membro Gold
+        router.push('/premium');
     };
 
     return (
@@ -41,42 +72,50 @@ export default function ProfileScreen() {
             {/* Profile Section */}
             <View style={styles.profileContainer}>
                 <View style={styles.profileHeader}>
-                    {userProfile.image ? (
-                        <Image source={userProfile.image} style={styles.profileImage} />
-                    ) : (
-                        <View style={styles.profileInitials}>
-                            <Text style={styles.initialsText}>MC</Text>
-                        </View>
-                    )}
-                    <Text style={styles.profileName}>{userProfile.name}</Text>
-                    <TouchableOpacity>
+                    {/* Usa uma imagem padrão até que a funcionalidade de carregar imagens esteja implementada */}
+                    <Image source={require('../assets/images/profile.png')} style={styles.profileImage} />
+
+                    {/* Exibe as iniciais do nome do usuário caso não tenha uma imagem personalizada */}
+                    <View style={styles.profileInitials}>
+                        <Text style={styles.initialsText}>
+                            {userProfile.name ? userProfile.name.charAt(0) : 'U'}
+                        </Text>
+                    </View>
+
+                    {/* Nome do Usuário */}
+                    <Text style={styles.profileName}>{userProfile.name} {userProfile.surname}</Text>
+
+                    {/* Botão para adicionar localização */}
+                    <Pressable>
                         <Text style={styles.addLocation}>Adicionar a minha localização</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
 
+                {/* Estatísticas do Perfil */}
                 <View style={styles.statsContainer}>
                     <View style={styles.statBox}>
-                        <Text style={styles.statNumber}>{userProfile.gamesPlayed}</Text>
+                        <Text style={styles.statNumber}>{userProfile.gamesPlayed || 0}</Text>
                         <Text style={styles.statLabel}>Jogos</Text>
                     </View>
                     <View style={styles.statBox}>
-                        <Text style={styles.statNumber}>{userProfile.followers}</Text>
+                        <Text style={styles.statNumber}>{userProfile.followers || 0}</Text>
                         <Text style={styles.statLabel}>Seguidores</Text>
                     </View>
                     <View style={styles.statBox}>
-                        <Text style={styles.statNumber}>{userProfile.following}</Text>
+                        <Text style={styles.statNumber}>{userProfile.following || 0}</Text>
                         <Text style={styles.statLabel}>A Seguir</Text>
                     </View>
                 </View>
 
+                {/* Botões de Ação */}
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
+                    <Pressable style={styles.editButton} onPress={handleEditProfile}>
                         <Text style={styles.editButtonText}>Editar perfil</Text>
-                    </TouchableOpacity>
+                    </Pressable>
 
-                    <TouchableOpacity style={styles.premiumButton} onPress={handleBecomePremium}>
+                    <Pressable style={styles.premiumButton} onPress={handleBecomePremium}>
                         <Text style={styles.premiumButtonText}>Torne-se Premium</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
 
                 {/* Seção de Preferências do Jogador */}
@@ -84,19 +123,19 @@ export default function ProfileScreen() {
                     <Text style={styles.preferencesTitle}>Preferências do Jogador</Text>
                     <View style={styles.preferenceItem}>
                         <Text style={styles.preferenceLabel}>Pé Dominante:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences.dominantFoot}</Text>
+                        <Text style={styles.preferenceValue}>{userProfile.preferences?.dominantFoot || 'N/A'}</Text>
                     </View>
                     <View style={styles.preferenceItem}>
                         <Text style={styles.preferenceLabel}>Posição no Campo:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences.position}</Text>
+                        <Text style={styles.preferenceValue}>{userProfile.preferences?.position || 'N/A'}</Text>
                     </View>
                     <View style={styles.preferenceItem}>
                         <Text style={styles.preferenceLabel}>Tipo de Jogo:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences.gameType}</Text>
+                        <Text style={styles.preferenceValue}>{userProfile.preferences?.gameType || 'N/A'}</Text>
                     </View>
                     <View style={styles.preferenceItem}>
                         <Text style={styles.preferenceLabel}>Horários Preferidos:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences.preferredTimes}</Text>
+                        <Text style={styles.preferenceValue}>{userProfile.preferences?.preferredTimes || 'N/A'}</Text>
                     </View>
                 </View>
 
