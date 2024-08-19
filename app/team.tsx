@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Modal, Pressable } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, Pressable, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
 import NavigationBar from "@/app/NavigationBar";
 import TopBar from "@/app/TopBar";
@@ -44,6 +44,10 @@ const TeamScreen: React.FC = () => {
         setSelectedPlayer(null);
     };
 
+    const handleCreateTeamPress = () => {
+        router.push('/create-team');
+    };
+
     return (
         <View style={styles.container}>
             {/* Top Bar */}
@@ -77,7 +81,7 @@ const TeamScreen: React.FC = () => {
                 data={players}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <TouchableOpacity
+                    <Pressable
                         style={[
                             styles.playerContainer,
                             item.isCaptain && styles.captainContainer,
@@ -89,9 +93,14 @@ const TeamScreen: React.FC = () => {
                             <Text style={styles.playerName}>{item.name}</Text>
                             <Text style={styles.playerPosition}>{item.position}</Text>
                         </View>
-                    </TouchableOpacity>
+                    </Pressable>
                 )}
             />
+
+            {/* Botão para criar nova equipa */}
+            <Pressable style={styles.createTeamButton} onPress={handleCreateTeamPress}>
+                <Text style={styles.createTeamButtonText}>Criar Nova Equipa</Text>
+            </Pressable>
 
             {/* Modal for player details */}
             {selectedPlayer && (
@@ -276,6 +285,18 @@ const styles = StyleSheet.create({
     statLabel: {
         fontSize: 16,
         color: '#6c757d',
+    },
+    createTeamButton: {
+        backgroundColor: '#28a745', // Cor do botão de criação de equipa
+        padding: 12,
+        alignItems: 'center',
+        borderRadius: 4,
+        marginVertical: 20, // Espaço extra ao redor do botão
+    },
+    createTeamButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 
