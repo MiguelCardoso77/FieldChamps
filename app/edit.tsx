@@ -22,7 +22,7 @@ export default function Edit() {
         try {
             const userId = auth.currentUser?.uid;
 
-            await update(ref(db, `/users/${userId}`), {
+            await update(ref(db, `/users/${userId}/profile`), {
                 name,
                 surname,
                 email,

@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
         color: '#000000',
         fontWeight: 'bold',
         textAlign: 'center', // Center text horizontally
-        textAlignVertical: 'center', // Center text vertically for Android
+        verticalAlign: 'middle', // Center text vertically
         lineHeight: 60, // Match the height of the circle for vertical centering
     },
     statLabel: {

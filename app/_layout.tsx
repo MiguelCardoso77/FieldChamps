@@ -30,7 +30,6 @@ export default function Layout() {
             <Tabs.Screen name="settings" options={{ title: 'Settings', headerShown: false }} />
 
             {/* Other Screens */}
-            <Tabs.Screen name="selectPhoneCode" options={{ title: 'Select Phone Code', headerShown: false }} />
             <Tabs.Screen name="edit" options={{ title: 'Edit', headerShown: false }} />
             <Tabs.Screen name="create-team" options={{ title: 'Create Team', headerShown: false }} />
 

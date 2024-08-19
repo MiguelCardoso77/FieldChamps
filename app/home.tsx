@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { ScrollView, View, Text, Image, FlatList, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React, {useState} from 'react';
+import { View, Text, Image, FlatList, StyleSheet } from 'react-native';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
 import NavigationBar from "@/components/NavigationBar";
 import TopBar from "../components/TopBar";
 
 const userName = 'Miguel Cardoso';
 
 const notifications = [
-    { id: '1', message: 'New message from Sarah', time: '5 mins ago' },
-    { id: '2', message: 'Your profile was updated', time: '1 hour ago' },
-    { id: '3', message: 'New team member joined', time: '2 hours ago' },
+    {id: '1', message: 'New message from Sarah', time: '5 minutes ago'},
+    {id: '2', message: 'Your profile was updated', time: '1 hour ago'},
+    {id: '3', message: 'New team member joined', time: '2 hours ago'},
 ];
 
 const statistics = [
-    { id: '1', label: 'Matches Played', value: '25' },
-    { id: '2', label: 'Goals Scored', value: '15' },
-    { id: '3', label: 'Assists', value: '8' },
+    {id: '1', label: 'Matches Played', value: '25'},
+    {id: '2', label: 'Goals Scored', value: '15'},
+    {id: '3', label: 'Assists', value: '8'},
 ];
 
 export default function HomeScreen() {
@@ -26,56 +26,54 @@ export default function HomeScreen() {
             {/* Top Bar */}
             <TopBar level={5} progress={0.5} games={10}/>
 
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                {/* Header */}
-                <View style={styles.header}>
-                    <Text style={styles.headerText}>Welcome</Text>
-                    <MaterialCommunityIcons name="account-circle" size={40} color="#007BFF" />
-                </View>
+            {/* Header */}
+            <View style={styles.header}>
+                <Text style={styles.headerText}>Welcome</Text>
+                <MaterialCommunityIcons name="account-circle" size={40} color="#007BFF"/>
+            </View>
 
-                {/* Profile Section */}
-                <View style={styles.profileSection}>
-                    <Image
-                        source={require('../assets/images/profile.png')}
-                        style={styles.profileImage}
-                    />
-                    <View style={styles.profileTextContainer}>
-                        <Text style={styles.greetingText}>Hello,</Text>
-                        <Text style={styles.userName}>{userName}</Text>
-                    </View>
+            {/* Profile Section */}
+            <View style={styles.profileSection}>
+                <Image
+                    source={require('../assets/images/profile.png')}
+                    style={styles.profileImage}
+                />
+                <View style={styles.profileTextContainer}>
+                    <Text style={styles.greetingText}>Hello,</Text>
+                    <Text style={styles.userName}>{userName}</Text>
                 </View>
+            </View>
 
-                {/* Notifications Section */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Notifications</Text>
-                    <FlatList
-                        data={notifications}
-                        keyExtractor={(item) => item.id}
-                        renderItem={({ item }) => (
-                            <View style={styles.notificationItem}>
-                                <Text style={styles.notificationMessage}>{item.message}</Text>
-                                <Text style={styles.notificationTime}>{item.time}</Text>
-                            </View>
-                        )}
-                    />
-                </View>
+            {/* Notifications Section */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Notifications</Text>
+                <FlatList
+                    data={notifications}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({item}) => (
+                        <View style={styles.notificationItem}>
+                            <Text style={styles.notificationMessage}>{item.message}</Text>
+                            <Text style={styles.notificationTime}>{item.time}</Text>
+                        </View>
+                    )}
+                />
+            </View>
 
-                {/* Statistics Section */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Statistics</Text>
-                    <View style={styles.statsContainer}>
-                        {statistics.map(stat => (
-                            <View key={stat.id} style={styles.statItem}>
-                                <Text style={styles.statLabel}>{stat.label}</Text>
-                                <Text style={styles.statValue}>{stat.value}</Text>
-                            </View>
-                        ))}
-                    </View>
+            {/* Statistics Section */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Statistics</Text>
+                <View style={styles.statsContainer}>
+                    {statistics.map(stat => (
+                        <View key={stat.id} style={styles.statItem}>
+                            <Text style={styles.statLabel}>{stat.label}</Text>
+                            <Text style={styles.statValue}>{stat.value}</Text>
+                        </View>
+                    ))}
                 </View>
-            </ScrollView>
+            </View>
 
             {/* Navigation Bar */}
-            <NavigationBar selected={selected} />
+            <NavigationBar selected={selected}/>
         </View>
     );
 }
@@ -110,7 +108,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 12,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
+        shadowOffset: {width: 0, height: 4},
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 5,
