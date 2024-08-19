@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image, Pressable, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
-import NavigationBar from "@/app/NavigationBar";
-import TopBar from "@/app/TopBar";
+import NavigationBar from "@/components/NavigationBar";
+import TopBar from "@/components/TopBar";
 
 type Player = {
     id: string;
@@ -134,12 +134,11 @@ const TeamScreen: React.FC = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
         backgroundColor: '#e9ecef',
+        paddingBottom: 80,
     },
     contentContainer: {
-        flexGrow: 1,
-        paddingBottom: 60,
+        paddingBottom: 80,
     },
     captainContainer: {
         backgroundColor: '#FFD700',

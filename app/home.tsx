@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Image, FlatList, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import NavigationBar from "@/app/NavigationBar";
-import TopBar from "./TopBar";
+import NavigationBar from "@/components/NavigationBar";
+import TopBar from "../components/TopBar";
 
 const userName = 'Miguel Cardoso';
 

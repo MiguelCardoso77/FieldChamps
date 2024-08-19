@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Switch, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import NavigationBar from "@/app/NavigationBar";
-import TopBar from "@/app/TopBar";
+import NavigationBar from "@/components/NavigationBar";
+import TopBar from "@/components/TopBar";
 
 export default function SettingsScreen() {
     const router = useRouter();
@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 60,
-        paddingHorizontal: 20,
         backgroundColor: '#f8f8f8',
     },
     header: {

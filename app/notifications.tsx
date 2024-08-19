@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
-import TopBar from "@/app/TopBar";
-import NavigationBar from "@/app/NavigationBar";
+import TopBar from "@/components/TopBar";
+import NavigationBar from "@/components/NavigationBar";
 
 interface Notification {
     id: string;

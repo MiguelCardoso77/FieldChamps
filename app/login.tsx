@@ -1,17 +1,30 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import auth from '@react-native-firebase/auth';
+import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import { auth } from '@/firebaseConfig';
 import { useRouter } from 'expo-router';
+import { signInWithEmailAndPassword } from "@firebase/auth";
 
 export default function LoginScreen() {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        // Navegação direta para a tela principal sem verificar credenciais
-        router.push('/home');
+    const handleLogin = async () => {
+        try {
+
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log('Usuário logado:', userCredential.user);
+            router.push('/home');
+
+        } catch (error : any) {
+            console.error('Erro ao fazer login:', error.message);
+            alert('Erro ao fazer login: ' + error.message);
+        }
     };
+
+    const devLogin = () => {
+        router.push('/home');
+    }
 
     return (
         <View style={styles.container}>
@@ -35,17 +48,17 @@ export default function LoginScreen() {
                 placeholderTextColor="#d3d3d3"
             />
 
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Pressable style={styles.button} onPress={ handleLogin }>
                 <Text style={styles.buttonText}>Entrar</Text>
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Google</Text>
-            </TouchableOpacity>
+            <Pressable style={styles.button} onPress={ devLogin }>
+                <Text style={styles.buttonText}>Dev Login</Text>
+            </Pressable>
 
-            <TouchableOpacity style={styles.link} onPress={() => router.push('/register')}>
-                <Text style={styles.linkText}>Ainda não tem uma conta? Registe-se</Text>
-            </TouchableOpacity>
+            <Pressable style={styles.link} onPress={() => router.push('/register')}>
+                <Text style={styles.linkText}>Ainda não tem uma conta? Registre-se</Text>
+            </Pressable>
         </View>
     );
 }

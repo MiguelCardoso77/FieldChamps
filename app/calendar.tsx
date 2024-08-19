@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useRouter } from 'expo-router';
-import NavigationBar from "@/app/NavigationBar";
-import TopBar from "@/app/TopBar";
+import NavigationBar from "@/components/NavigationBar";
+import TopBar from "@/components/TopBar";
 
 type DayProps = {
     dateString: string;

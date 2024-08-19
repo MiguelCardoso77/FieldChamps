@@ -1,5 +1,5 @@
 import React from 'react';
-import NavigationBar from "@/app/NavigationBar";
+import NavigationBar from "@/components/NavigationBar";
 import { View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground } from 'react-native';
 
 const group = {

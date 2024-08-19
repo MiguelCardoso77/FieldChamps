@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import NavigationBar from "@/app/NavigationBar";
-import TopBar from "@/app/TopBar";
+import NavigationBar from "@/components/NavigationBar";
+import TopBar from "@/components/TopBar";
 import { db } from '@/firebaseConfig';
 import { ref, onValue } from "firebase/database";
 
@@ -40,7 +40,7 @@ export default function FieldsScreen() {
     }, []);
 
     const renderItem = ({ item }: { item: Field }) => (
-        <TouchableOpacity style={styles.fieldContainer}>
+        <Pressable style={styles.fieldContainer}>
             <Text style={styles.fieldName}>{item.name}</Text>
             <Text style={styles.fieldLocation}>{item.location}</Text>
             <Text
@@ -51,7 +51,7 @@ export default function FieldsScreen() {
             >
                 {item.availability}
             </Text>
-        </TouchableOpacity>
+        </Pressable>
     );
 
     return (

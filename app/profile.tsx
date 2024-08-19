@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
-import NavigationBar from "@/app/NavigationBar";
-import TopBar from './TopBar';
+import NavigationBar from "@/components/NavigationBar";
+import TopBar from '../components/TopBar';
 import { useRouter } from "expo-router";
 import { auth, db } from '@/firebaseConfig';
 import { ref, get } from 'firebase/database';
