@@ -37,7 +37,7 @@ export default function CalendarScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBar level={5} />
+            <TopBar level={5} progress={0.5} games={10}/>
 
             <Text style={styles.title}>Select a Date</Text>
             <Calendar

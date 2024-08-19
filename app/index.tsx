@@ -1,14 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, Pressable, StyleSheet, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
     const router = useRouter();
-
-    const handleNavigation = (screen: string) => {
-        // @ts-ignore
-        router.push(`/${screen}` as string);
-    };
 
     return (
         <ImageBackground
@@ -19,18 +14,18 @@ export default function HomeScreen() {
                 <Text style={styles.title}>Bem-vindo ao FieldChamps!</Text>
                 <Text style={styles.subtitle}>Aqui o teu futebol nunca mais será o mesmo.</Text>
 
-                <TouchableOpacity
+                <Pressable
                     style={styles.buttonPrimary}
-                    onPress={() => handleNavigation('register')}
+                    onPress={() =>  router.push(`/register`) }
                 >
                     <Text style={styles.buttonText}>Novo por aqui?</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                </Pressable>
+                <Pressable
                     style={styles.buttonSecondary}
-                    onPress={() => handleNavigation('login')}
+                    onPress={() => router.push(`/login`) }
                 >
                     <Text style={styles.buttonText}>Já sou membro</Text>
-                </TouchableOpacity>
+                </Pressable>
                 <Text style={styles.footer}>PT Feito em Portugal</Text>
             </View>
         </ImageBackground>
@@ -48,7 +43,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo semi-transparente
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         width: '100%',
         paddingHorizontal: 20,
     },
@@ -66,7 +61,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     buttonPrimary: {
-        backgroundColor: '#9fdc00', // Cor do botão "Novo por aqui?"
+        backgroundColor: '#9fdc00',
         paddingVertical: 15,
         paddingHorizontal: 30,
         borderRadius: 5,
@@ -75,7 +70,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     buttonSecondary: {
-        backgroundColor: '#6b7d00', // Cor do botão "Já sou membro"
+        backgroundColor: '#6b7d00',
         paddingVertical: 15,
         paddingHorizontal: 30,
         borderRadius: 5,

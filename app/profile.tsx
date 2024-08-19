@@ -67,7 +67,7 @@ export default function ProfileScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBar level={5} />
+            <TopBar level={5} progress={0.5} games={10}/>
 
             {/* Profile Section */}
             <View style={styles.profileContainer}>

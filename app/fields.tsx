@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import NavigationBar from "@/app/NavigationBar";
 import TopBar from "@/app/TopBar";
+import { db } from '@/firebaseConfig';
+import { ref, onValue } from "firebase/database";
 
 type Field = {
     id: string;
@@ -11,36 +13,64 @@ type Field = {
     availability: string;
 };
 
-const fields: Field[] = [
-    { id: '1', name: 'Campo de Futebol', location: 'Rua A, Bairro X', availability: 'Disponível' },
-    { id: '2', name: 'Quadra de Tênis', location: 'Rua B, Bairro Y', availability: 'Indisponível' },
-    { id: '3', name: 'Sala de Conferência', location: 'Avenida C, Bairro Z', availability: 'Disponível' },
-    { id: '4', name: 'Campo de Basquete', location: 'Rua D, Bairro W', availability: 'Indisponível' },
-    // Adicione mais campos conforme necessário
-];
-
 export default function FieldsScreen() {
     const router = useRouter();
+    const [fields, setFields] = useState<Field[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fieldsRef = ref(db, '/fields');
+        const unsubscribe = onValue(fieldsRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                const parsedFields = Object.keys(data).map((key) => ({
+                    id: key,
+                    name: data[key].name,
+                    location: data[key].location,
+                    availability: data[key].availability,
+                }));
+                setFields(parsedFields);
+            } else {
+                setFields([]);
+            }
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const renderItem = ({ item }: { item: Field }) => (
         <TouchableOpacity style={styles.fieldContainer}>
             <Text style={styles.fieldName}>{item.name}</Text>
             <Text style={styles.fieldLocation}>{item.location}</Text>
+            <Text
+                style={[
+                    styles.fieldAvailability,
+                    item.availability === 'Disponível' ? styles.available : styles.unavailable,
+                ]}
+            >
+                {item.availability}
+            </Text>
         </TouchableOpacity>
     );
 
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBar level={5} />
+            <TopBar level={5} progress={0.5} games={10}/>
 
             <Text style={styles.title}>Campos Disponíveis</Text>
-            <FlatList
-                data={fields}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.list}
-            />
+
+            {loading ? (
+                <Text style={styles.loadingText}>Carregando...</Text>
+            ) : (
+                <FlatList
+                    data={fields}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                    contentContainerStyle={styles.list}
+                />
+            )}
 
             {/* Barra de Navegação */}
             <NavigationBar selected="fields" />
@@ -96,5 +126,11 @@ const styles = StyleSheet.create({
     },
     unavailable: {
         color: '#FF3B30',
+    },
+    loadingText: {
+        fontSize: 18,
+        textAlign: 'center',
+        marginTop: 20,
+        color: '#666',
     },
 });

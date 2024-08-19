@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import { GoogleSigninButton, GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useRouter } from 'expo-router';
 
 export default function LoginScreen() {
@@ -41,12 +40,6 @@ export default function LoginScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button}>
-                <GoogleSigninButton
-                    style={styles.button}
-                    size={GoogleSigninButton.Size.Wide}
-                    color={GoogleSigninButton.Color.Dark}
-                    onPress={handleLogin}
-                />
                 <Text style={styles.buttonText}>Google</Text>
             </TouchableOpacity>
 

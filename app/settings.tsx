@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Switch, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Switch, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import NavigationBar from "@/app/NavigationBar";
 import TopBar from "@/app/TopBar";
@@ -15,7 +15,7 @@ export default function SettingsScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBar level={5} />
+            <TopBar level={5} progress={0.5} games={10}/>
 
             <Text style={styles.header}>Settings</Text>
 

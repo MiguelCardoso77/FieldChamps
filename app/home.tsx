@@ -24,7 +24,7 @@ export default function HomeScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBar level={5} />
+            <TopBar level={5} progress={0.5} games={10}/>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 {/* Header */}
