@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { View, Text, FlatList, Pressable, StyleSheet, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import NavigationBar from "@/components/NavigationBar";
 import TopBar from "@/components/TopBar";
 import { db } from '@/firebaseConfig';
 import { ref, onValue } from "firebase/database";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 type Field = {
     id: string;
     name: string;
     location: string;
-    availability: string;
+    timetable: string;
+    image: any;
+    price: string;
 };
 
 export default function FieldsScreen() {
@@ -27,7 +30,9 @@ export default function FieldsScreen() {
                     id: key,
                     name: data[key].name,
                     location: data[key].location,
-                    availability: data[key].availability,
+                    timetable: data[key].timetable,
+                    image: data[key].image,
+                    price: data[key].price,
                 }));
                 setFields(parsedFields);
             } else {
@@ -41,16 +46,15 @@ export default function FieldsScreen() {
 
     const renderItem = ({ item }: { item: Field }) => (
         <Pressable style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>{item.name}</Text>
-            <Text style={styles.fieldLocation}>{item.location}</Text>
-            <Text
-                style={[
-                    styles.fieldAvailability,
-                    item.availability === 'Disponível' ? styles.available : styles.unavailable,
-                ]}
-            >
-                {item.availability}
-            </Text>
+            <Image source={{ uri: item.image }} style={styles.fieldImage} />
+            <View style={styles.overlay}>
+                <Text style={styles.fieldName}>{item.name}</Text>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.fieldLocation}>{item.location}</Text>
+                    <Text style={styles.fieldPrice}>{item.price}</Text>
+                </View>
+                <MaterialCommunityIcons name="heart" size={24} color="#fff" style={styles.favoriteIcon} />
+            </View>
         </Pressable>
     );
 
@@ -59,20 +63,21 @@ export default function FieldsScreen() {
             {/* Top Bar */}
             <TopBar level={5} progress={0.5} games={10}/>
 
-            <Text style={styles.title}>Campos Disponíveis</Text>
+            {/* Content Section with Padding */}
+            <View style={styles.contentContainer}>
+                {loading ? (
+                    <Text style={styles.loadingText}>Carregando...</Text>
+                ) : (
+                    <FlatList
+                        data={fields}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                        contentContainerStyle={styles.list}
+                    />
+                )}
+            </View>
 
-            {loading ? (
-                <Text style={styles.loadingText}>Carregando...</Text>
-            ) : (
-                <FlatList
-                    data={fields}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    contentContainerStyle={styles.list}
-                />
-            )}
-
-            {/* Barra de Navegação */}
+            {/* Navigation Bar */}
             <NavigationBar selected="fields" />
         </View>
     );
@@ -84,48 +89,58 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8f8f8',
     },
     contentContainer: {
-        flexGrow: 1,
-        paddingBottom: 60,
-    },
-    title: {
-        fontSize: 24,
-        marginBottom: 20,
-        textAlign: 'center',
-        color: '#333',
+        flex: 1,
+        paddingTop: 60,
     },
     list: {
         paddingBottom: 20,
     },
     fieldContainer: {
-        backgroundColor: '#fff',
-        padding: 15,
+        position: 'relative',
+        marginBottom: 20,
+    },
+    fieldImage: {
+        width: '100%',
+        height: 200,
         borderRadius: 8,
-        marginBottom: 10,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        shadowOffset: { width: 0, height: 2 },
-        elevation: 3,
+    },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'space-between',
+        padding: 10,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)', // Dark overlay on image
+        borderRadius: 8,
     },
     fieldName: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#fff',
+    },
+    infoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     fieldLocation: {
         fontSize: 14,
-        color: '#666',
-        marginVertical: 5,
+        color: '#fff',
     },
-    fieldAvailability: {
+    fieldPrice: {
         fontSize: 14,
         fontWeight: 'bold',
+        color: '#fff',
     },
-    available: {
-        color: '#007BFF',
-    },
-    unavailable: {
-        color: '#FF3B30',
+    favoriteIcon: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        width: 24,
+        height: 24,
+        tintColor: '#fff',  // Ensure the icon is visible on the dark overlay
     },
     loadingText: {
         fontSize: 18,
