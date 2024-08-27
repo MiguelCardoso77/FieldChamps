@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet, SafeAreaView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -13,48 +13,53 @@ export default function TopBar({ level, progress, games }: TopBarProps) {
     const router = useRouter();
 
     return (
-        <View style={styles.topBarContainer}>
+        <SafeAreaView style={styles.safeArea}>
+            <View style={styles.topBarContainer}>
 
-            {/* Level Indicator with Progress */}
-            <View style={styles.levelContainer}>
-                <View style={styles.levelBadge}>
-                    <Text style={styles.levelNumber}>{level}</Text>
+                {/* Level Indicator with Progress */}
+                <View style={styles.levelContainer}>
+                    <View style={styles.levelBadge}>
+                        <Text style={styles.levelNumber}>{level}</Text>
+                    </View>
+                    <View style={styles.progressBar}>
+                        <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
+                    </View>
                 </View>
-                <View style={styles.progressBar}>
-                    <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
+
+                {/* Games Played */}
+                <View style={styles.iconsContainer}>
+                    <View style={styles.flamesContainer}>
+                        <MaterialCommunityIcons name="soccer-field" size={24} color="#5b5568" />
+                        <Text style={styles.flamesText}>{games}</Text>
+                    </View>
                 </View>
-            </View>
 
-            {/* Games Played */}
-            <View style={styles.iconsContainer}>
-                <View style={styles.flamesContainer}>
-                    <MaterialCommunityIcons name="soccer-field" size={24} color="#5b5568" />
-                    <Text style={styles.flamesText}>{games}</Text>
+                {/* Notifications and Settings Buttons */}
+                <View style={styles.rightIconsContainer}>
+                    <Pressable
+                        style={styles.notificationButton}
+                        onPress={() => router.push('/notifications')}
+                    >
+                        <MaterialCommunityIcons name="bell-outline" size={28} color="#ffffff" />
+                    </Pressable>
+
+                    <Pressable
+                        style={styles.settingsButton}
+                        onPress={() => router.push('/settings')}
+                    >
+                        <MaterialCommunityIcons name="cog-outline" size={28} color="#ffffff" />
+                    </Pressable>
                 </View>
+
             </View>
-
-            {/* Notifications and Settings Buttons */}
-            <View style={styles.rightIconsContainer}>
-                <Pressable
-                    style={styles.notificationButton}
-                    onPress={() => router.push('/notifications')}
-                >
-                    <MaterialCommunityIcons name="bell-outline" size={28} color="#ffffff" />
-                </Pressable>
-
-                <Pressable
-                    style={styles.settingsButton}
-                    onPress={() => router.push('/settings')}
-                >
-                    <MaterialCommunityIcons name="cog-outline" size={28} color="#ffffff" />
-                </Pressable>
-            </View>
-
-        </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        backgroundColor: '#0e0a18',
+    },
     topBarContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
