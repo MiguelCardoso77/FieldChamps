@@ -6,21 +6,6 @@ import { useRouter } from "expo-router";
 import { auth, db } from '@/firebaseConfig';
 import { ref, get } from 'firebase/database';
 
-const userProfile = {
-    name: 'Miguel Cardoso',
-    email: 'miguel@example.com',
-    image: require('../assets/images/profile.png'),
-    gamesPlayed: 120,
-    followers: 340,
-    following: 180,
-    preferences: {
-        dominantFoot: 'Direito',
-        position: 'Atacante',
-        gameType: 'Amigável',
-        preferredTimes: 'Noites de semana',
-    }
-};
-
 export default function ProfileScreen() {
     const router = useRouter();
     const [userProfile, setUserProfile] = useState(null);
@@ -33,7 +18,7 @@ export default function ProfileScreen() {
                     const userRef = ref(db, `users/${userId}`);
                     const snapshot = await get(userRef);
                     if (snapshot.exists()) {
-                        setUserProfile(snapshot.val()); // Atualiza o estado com os dados do perfil
+                        setUserProfile(snapshot.val());
                     } else {
                         console.log("Nenhum dado encontrado para esse usuário.");
                     }
@@ -64,6 +49,10 @@ export default function ProfileScreen() {
         router.push('/premium');
     };
 
+    const handleEditPreferences = () => {
+        router.push('/preferences');
+    }
+
     return (
         <View style={styles.container}>
             {/* Top Bar */}
@@ -72,18 +61,15 @@ export default function ProfileScreen() {
             {/* Profile Section */}
             <View style={styles.profileContainer}>
                 <View style={styles.profileHeader}>
-                    {/* Usa uma imagem padrão até que a funcionalidade de carregar imagens esteja implementada */}
-                    <Image source={require('../assets/images/profile.png')} style={styles.profileImage} />
-
                     {/* Exibe as iniciais do nome do usuário caso não tenha uma imagem personalizada */}
                     <View style={styles.profileInitials}>
                         <Text style={styles.initialsText}>
-                            {userProfile.name ? userProfile.name.charAt(0) : 'U'}
+                            {userProfile.profile.name ? userProfile.profile.name.charAt(0) : '?'}
                         </Text>
                     </View>
 
                     {/* Nome do Usuário */}
-                    <Text style={styles.profileName}>{userProfile.name} {userProfile.surname}</Text>
+                    <Text style={styles.profileName}>{userProfile.profile.name} {userProfile.profile.surname}</Text>
 
                     {/* Botão para adicionar localização */}
                     <Pressable>
@@ -94,48 +80,55 @@ export default function ProfileScreen() {
                 {/* Estatísticas do Perfil */}
                 <View style={styles.statsContainer}>
                     <View style={styles.statBox}>
-                        <Text style={styles.statNumber}>{userProfile.gamesPlayed || 0}</Text>
+                        <Text style={styles.statNumber}>{userProfile.stats.gamesPlayed || 0}</Text>
                         <Text style={styles.statLabel}>Jogos</Text>
                     </View>
                     <View style={styles.statBox}>
-                        <Text style={styles.statNumber}>{userProfile.followers || 0}</Text>
+                        <Text style={styles.statNumber}>{userProfile.stats.followers || 0}</Text>
                         <Text style={styles.statLabel}>Seguidores</Text>
                     </View>
                     <View style={styles.statBox}>
-                        <Text style={styles.statNumber}>{userProfile.following || 0}</Text>
+                        <Text style={styles.statNumber}>{userProfile.stats.following || 0}</Text>
                         <Text style={styles.statLabel}>A Seguir</Text>
                     </View>
                 </View>
 
                 {/* Botões de Ação */}
                 <View style={styles.buttonContainer}>
-                    <Pressable style={styles.editButton} onPress={handleEditProfile}>
+                    <Pressable style={styles.editButton} onPress={ handleEditProfile }>
                         <Text style={styles.editButtonText}>Editar perfil</Text>
                     </Pressable>
 
-                    <Pressable style={styles.premiumButton} onPress={handleBecomePremium}>
+                    <Pressable style={styles.premiumButton} onPress={ handleBecomePremium }>
                         <Text style={styles.premiumButtonText}>Torne-se Premium</Text>
                     </Pressable>
                 </View>
 
                 {/* Seção de Preferências do Jogador */}
                 <View style={styles.preferencesContainer}>
-                    <Text style={styles.preferencesTitle}>Preferências do Jogador</Text>
-                    <View style={styles.preferenceItem}>
-                        <Text style={styles.preferenceLabel}>Pé Dominante:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences?.dominantFoot || 'N/A'}</Text>
+                    <View style={styles.preferencesHeader}>
+                        <Text style={styles.preferencesTitle}>Preferências do Jogador</Text>
+                        <Text style={styles.editText} onPress={handleEditPreferences}>Editar</Text>
                     </View>
+
                     <View style={styles.preferenceItem}>
-                        <Text style={styles.preferenceLabel}>Posição no Campo:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences?.position || 'N/A'}</Text>
+                        <Text style={styles.preferenceLabel}>🦶 Pé Dominante:</Text>
+                        <Text style={styles.preferenceValue}>{userProfile.preferences?.dominantFoot || 'Não definido'}</Text>
                     </View>
+
                     <View style={styles.preferenceItem}>
-                        <Text style={styles.preferenceLabel}>Tipo de Jogo:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences?.gameType || 'N/A'}</Text>
+                        <Text style={styles.preferenceLabel}>🧩 Posição no Campo:</Text>
+                        <Text style={styles.preferenceValue}>{userProfile.preferences?.position || 'Não definido'}</Text>
                     </View>
+
                     <View style={styles.preferenceItem}>
-                        <Text style={styles.preferenceLabel}>Horários Preferidos:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences?.preferredTimes || 'N/A'}</Text>
+                        <Text style={styles.preferenceLabel}>🏟️ Tipo de Jogo:</Text>
+                        <Text style={styles.preferenceValue}>{userProfile.preferences?.gameType || 'Não definido'}</Text>
+                    </View>
+
+                    <View style={styles.preferenceItem}>
+                        <Text style={styles.preferenceLabel}>🕒 Horários Preferidos:</Text>
+                        <Text style={styles.preferenceValue}>{userProfile.preferences?.preferredTimes || 'Não definido'}</Text>
                     </View>
                 </View>
 
@@ -153,7 +146,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f5f5f5',
     },
     profileContainer: {
-        paddingTop: 60, // Extra space for the top bar
+        paddingTop: 60,
         paddingHorizontal: 20,
     },
     profileHeader: {
@@ -239,32 +232,40 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+
+    /* Preferences Section */
     preferencesContainer: {
-        marginTop: 30,
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        elevation: 2,
+        padding: 20,
+        backgroundColor: '#f5f5f5',
+    },
+    preferencesHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
     },
     preferencesTitle: {
-        fontSize: 18,
+        fontSize: 26,
         fontWeight: 'bold',
         color: '#333',
-        marginBottom: 10,
+    },
+    editText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#1e3d7c',
     },
     preferenceItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 10,
+        alignItems: 'center',
+        marginBottom: 15,
     },
     preferenceLabel: {
-        fontSize: 16,
-        color: '#777',
+        fontSize: 20,
+        color: '#333',
     },
     preferenceValue: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#333',
+        fontSize: 20,
+        color: '#555',
     },
 });
