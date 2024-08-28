@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet, SafeAreaView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import {Colors} from "@/constants/Colors";
 
 interface TopBarProps {
     level: number;
@@ -65,10 +66,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#0e0a18',
-        paddingVertical: 10,
+        paddingVertical: 14,
         paddingHorizontal: 15,
-        position: 'absolute',
-        top: 0,
         width: '100%',
         elevation: 4,
         zIndex: 1000,
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     levelBadge: {
-        backgroundColor: '#0077ff',
+        backgroundColor: Colors.darkBlue.buttons,
         padding: 6,
         borderRadius: 6,
         justifyContent: 'center',
@@ -98,7 +97,7 @@ const styles = StyleSheet.create({
     },
     progressFill: {
         height: '100%',
-        backgroundColor: '#0077ff',
+        backgroundColor: Colors.darkBlue.buttons,
         borderRadius: 5,
     },
     iconsContainer: {
@@ -111,16 +110,6 @@ const styles = StyleSheet.create({
         marginRight: 15,
     },
     flamesText: {
-        color: '#ffffff',
-        fontSize: 16,
-        marginLeft: 5,
-    },
-    eggsContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: 10,
-    },
-    eggsText: {
         color: '#ffffff',
         fontSize: 16,
         marginLeft: 5,

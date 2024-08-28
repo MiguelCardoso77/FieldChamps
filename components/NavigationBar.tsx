@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         backgroundColor: Colors.dark.bars,
-        paddingVertical: 12,
+        paddingVertical: 14,
         position: 'absolute',
         bottom: 0,
         width: '100%',
