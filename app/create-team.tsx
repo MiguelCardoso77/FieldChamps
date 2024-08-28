@@ -8,14 +8,15 @@ import { push, ref, set } from "firebase/database";
 
 export default function CreateTeamScreen() {
     const router = useRouter();
-    const [teamName, setTeamName] = useState('');
     const [teamAcronym, setTeamAcronym] = useState('');
     const [teamDescription, setTeamDescription] = useState('');
+    const [teamImage, setTeamImage] = useState('');
+    const [teamName, setTeamName] = useState('');
 
     const handleSave = async () => {
         const teamCaptain = auth.currentUser?.uid;
 
-        if (teamName.trim() === '' || teamAcronym.trim() === '' || teamDescription.trim() === '') {
+        if (teamName.trim() === '' || teamAcronym.trim() === '') {
             Alert.alert('Erro', 'Todos os campos são obrigatórios.');
             return;
         }
@@ -28,15 +29,16 @@ export default function CreateTeamScreen() {
         const newTeamRef = push(ref(db, '/teams/'));
 
         await set(newTeamRef, {
-            teamName,
             teamAcronym,
-            teamDescription,
             teamCaptain,
+            teamDescription,
+            teamImage,
+            teamName,
         });
 
         Alert.alert('Sucesso', `Equipa "${teamName}" criada com sucesso!`);
 
-        router.push('/team');
+        router.push('/myteams');
     };
 
     return (
