@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Pressable, StyleSheet, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import NavigationBar from "@/components/NavigationBar";
-import TopBar from "@/components/TopBar";
+import TopBarStats from "@/components/TopBarStats";
 import { db } from '@/firebaseConfig';
 import { ref, onValue } from "firebase/database";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -61,7 +61,7 @@ export default function FieldsScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBar level={5} progress={0.5} games={10}/>
+            <TopBarStats />
 
             {/* Content Section with Padding */}
             <View style={styles.contentContainer}>

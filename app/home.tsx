@@ -3,6 +3,7 @@ import { View, Text, Image, FlatList, StyleSheet } from 'react-native';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import NavigationBar from "@/components/NavigationBar";
 import TopBar from "../components/TopBar";
+import TopBarStats from "@/components/TopBarStats";
 
 const userName = 'Miguel Cardoso';
 
@@ -24,7 +25,7 @@ export default function HomeScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBar level={5} progress={0.5} games={10}/>
+            <TopBarStats />
 
             {/* Header */}
             <View style={styles.header}>

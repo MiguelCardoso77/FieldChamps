@@ -6,6 +6,7 @@ import { Styles } from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import { onValue, ref } from "firebase/database";
 import { db } from "@/firebaseConfig";
+import TopBarStats from "@/components/TopBarStats";
 
 type Team = {
     id: string;
@@ -100,7 +101,7 @@ export default function MyTeams() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBar level={5} progress={0.5} games={10}/>
+            <TopBarStats />
 
             <View style={Styles.pageContainer}>
                 {loading ? (

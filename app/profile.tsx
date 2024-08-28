@@ -5,6 +5,7 @@ import TopBar from '../components/TopBar';
 import { useRouter } from "expo-router";
 import { auth, db } from '@/firebaseConfig';
 import { ref, get } from 'firebase/database';
+import TopBarStats from "@/components/TopBarStats";
 
 export default function ProfileScreen() {
     const router = useRouter();
@@ -56,7 +57,7 @@ export default function ProfileScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBar level={5} progress={0.5} games={10}/>
+            <TopBarStats />
 
             {/* Profile Section */}
             <View style={styles.profileContainer}>

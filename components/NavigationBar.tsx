@@ -14,44 +14,64 @@ export default function NavigationBar({ selected }: NavigationBarProps) {
     return (
         <View style={styles.menuContainer}>
 
-            { /* Home Button */ }
+            {/* Home Button */}
             <Pressable
                 style={styles.menuButton}
                 onPress={() => router.push('/home')}
             >
-                <MaterialCommunityIcons name={selected === 'home' ? 'home' : 'home-outline'} size={32} color="#ffffff" />
+                <MaterialCommunityIcons
+                    name={selected === 'home' ? 'home' : 'home-outline'}
+                    size={32}
+                    color={selected === 'home' ? Colors.darkBlue.buttons : '#ffffff'}
+                />
             </Pressable>
 
-            { /* Team Button */ }
+            {/* Team Button */}
             <Pressable
                 style={styles.menuButton}
                 onPress={() => router.push('/myteams')}
             >
-                <MaterialCommunityIcons name={selected === 'team' ? 'account-group' : 'account-group-outline'} size={32} color="#ffffff" />
+                <MaterialCommunityIcons
+                    name={selected === 'team' ? 'account-group' : 'account-group-outline'}
+                    size={32}
+                    color={selected === 'team' ? Colors.darkBlue.buttons : '#ffffff'}
+                />
             </Pressable>
 
-            { /* Fields Button */ }
+            {/* Upload Game Button */}
+            <Pressable
+                style={styles.menuButton}
+                onPress={() => router.push('/upload-game')}
+            >
+                <MaterialCommunityIcons
+                    name={selected === 'game' ? 'soccer' : 'soccer'}
+                    size={32}
+                    color={selected === 'game' ? Colors.darkBlue.buttons : '#ffffff'}
+                />
+            </Pressable>
+
+            {/* Fields Button */}
             <Pressable
                 style={styles.menuButton}
                 onPress={() => router.push('/fields')}
             >
-                <MaterialCommunityIcons name={selected === 'fields' ? 'soccer-field' : 'soccer'} size={32} color="#ffffff" />
+                <MaterialCommunityIcons
+                    name={selected === 'fields' ? 'soccer-field' : 'soccer-field'}
+                    size={32}
+                    color={selected === 'fields' ? Colors.darkBlue.buttons : '#ffffff'}
+                />
             </Pressable>
 
-            { /* Calendar Button */ }
-            <Pressable
-                style={styles.menuButton}
-                onPress={() => router.push('/calendar')}
-            >
-                <MaterialCommunityIcons name={selected === 'calendar' ? 'calendar' : 'calendar-blank'} size={32} color="#ffffff" />
-            </Pressable>
-
-            { /* Profile Button */ }
+            {/* Profile Button */}
             <Pressable
                 style={styles.menuButton}
                 onPress={() => router.push('/profile')}
             >
-                <MaterialCommunityIcons name={selected === 'profile' ? 'account' : 'account-outline'} size={32} color="#ffffff" />
+                <MaterialCommunityIcons
+                    name={selected === 'profile' ? 'account' : 'account-outline'}
+                    size={32}
+                    color={selected === 'profile' ? Colors.darkBlue.buttons : '#ffffff'}
+                />
             </Pressable>
 
         </View>

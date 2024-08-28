@@ -31,6 +31,8 @@ export default function RegisterScreen() {
         });
 
         await set(ref(db, `/users/${userId}/stats`), {
+            level: 0,
+            progress: 0,
             gamesPlayed: 0,
             goalsScored: 0,
             assists: 0,
