@@ -25,7 +25,7 @@ export default function NavigationBar({ selected }: NavigationBarProps) {
             { /* Team Button */ }
             <Pressable
                 style={styles.menuButton}
-                onPress={() => router.push('/team')}
+                onPress={() => router.push('/myteams')}
             >
                 <MaterialCommunityIcons name={selected === 'team' ? 'account-group' : 'account-group-outline'} size={32} color="#ffffff" />
             </Pressable>

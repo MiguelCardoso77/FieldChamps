@@ -33,6 +33,7 @@ export default function Layout() {
             <Tabs.Screen name="edit" options={{ title: 'Edit', headerShown: false }} />
             <Tabs.Screen name="preferences" options={{ title: 'Preferences', headerShown: false }} />
             <Tabs.Screen name="create-team" options={{ title: 'Create Team', headerShown: false }} />
+            <Tabs.Screen name="myteams" options={{ title: 'My Teams', headerShown: false }} />
 
         </Tabs>
     );

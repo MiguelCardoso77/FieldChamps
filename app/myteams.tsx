@@ -1,6 +1,7 @@
 import React from 'react';
 import NavigationBar from "@/components/NavigationBar";
 import { View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground } from 'react-native';
+import TopBar from "@/components/TopBar";
 
 const group = {
     name: 'Multi FC',  // Group name updated to match the image
@@ -23,6 +24,8 @@ const group = {
 const GroupScreen: React.FC = () => {
     return (
         <View style={styles.container}>
+            {/* Top Bar */}
+            <TopBar level={5} progress={0.5} games={10}/>
             {/* Cabeçalho com "Meus Grupos" e "Criar Grupo" */}
             <View style={styles.headerContainer}>
                 <Text style={styles.headerTitle}>Meus grupos</Text>
@@ -68,7 +71,7 @@ const GroupScreen: React.FC = () => {
             </View>
 
             {/* Barra de Navegação */}
-            <NavigationBar selected="calendar" />
+            <NavigationBar selected="team" />
         </View>
     );
 };
@@ -77,7 +80,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#1A1717',
-        padding: 15,
     },
     headerContainer: {
         flexDirection: 'row',

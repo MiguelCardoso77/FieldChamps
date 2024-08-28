@@ -47,8 +47,9 @@ export default function RegisterScreen() {
         });
 
         await set(ref(db, `/users/${userId}/team`), {
-            teamId: "",
-            teamName: "",
+            teamIdSlot1: "",
+            teamIdSlot2: "",
+            teamIdSlot3: "",
         });
     }
 
