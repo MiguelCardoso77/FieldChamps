@@ -71,7 +71,7 @@ export default function MyTeams() {
                         <Text style={Styles.buttonText}>Criar Equipa</Text>
                     </Pressable>
                     <Pressable
-                        onPress={() => router.navigate('/search-teams')}
+                        onPress={() => router.navigate('/SearchTeamsScreen')}
                         style={[styles.halfButton, styles.rightButton]}
                     >
                         <Text style={Styles.buttonText}>Procurar Equipa</Text>

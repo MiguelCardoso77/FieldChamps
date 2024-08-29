@@ -38,11 +38,12 @@ export default function Layout() {
             {/* Game Screens */}
             <Tabs.Screen name="search-games" options={{ title: 'Search Games', headerShown: false }} />
             <Tabs.Screen name="create-game" options={{ title: 'Create Game', headerShown: false }} />
+            <Tabs.Screen name="GameDetailsScreen" options={{ title: 'Game Details', headerShown: false }} />
 
             {/* Team Screens */}
             <Tabs.Screen name="create-team" options={{ title: 'Create Team', headerShown: false }} />
             <Tabs.Screen name="team" options={{ title: 'Team', headerShown: false }} />
-            <Tabs.Screen name="search-teams" options={{ title: 'Search Teams', headerShown: false }} />
+            <Tabs.Screen name="SearchTeamsScreen" options={{ title: 'Search Teams', headerShown: false }} />
 
         </Tabs>
     );
