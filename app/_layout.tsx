@@ -32,13 +32,16 @@ export default function Layout() {
             {/* Other Screens */}
             <Tabs.Screen name="edit" options={{ title: 'Edit', headerShown: false }} />
             <Tabs.Screen name="preferences" options={{ title: 'Preferences', headerShown: false }} />
-            <Tabs.Screen name="create-team" options={{ title: 'Create Team', headerShown: false }} />
-            <Tabs.Screen name="team" options={{ title: 'Team', headerShown: false }} />
             <Tabs.Screen name="calendar" options={{ title: 'Calendar', headerShown: false }} />
 
             {/* Game Screens */}
             <Tabs.Screen name="search-games" options={{ title: 'Search Games', headerShown: false }} />
             <Tabs.Screen name="create-game" options={{ title: 'Create Game', headerShown: false }} />
+
+            {/* Team Screens */}
+            <Tabs.Screen name="create-team" options={{ title: 'Create Team', headerShown: false }} />
+            <Tabs.Screen name="team" options={{ title: 'Team', headerShown: false }} />
+            <Tabs.Screen name="search-teams" options={{ title: 'Search Teams', headerShown: false }} />
 
         </Tabs>
     );

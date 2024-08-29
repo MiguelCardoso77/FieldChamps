@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import NavigationBar from "@/components/NavigationBar";
 import { View, Text, StyleSheet, Pressable, ImageBackground, FlatList } from 'react-native';
-import TopBar from "@/components/TopBar";
+import TopBarStats from "@/components/TopBarStats";
 import { Styles } from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import { onValue, ref } from "firebase/database";
 import { db } from "@/firebaseConfig";
-import TopBarStats from "@/components/TopBarStats";
+import { Colors } from "@/constants/Colors";
 
 type Team = {
     id: string;
@@ -61,20 +61,22 @@ export default function MyTeams() {
 
     const renderItem = ({ item }: { item: Team | null }) => {
         if (item === null) {
-            // Render the Create Team button
+            // Render the "Create Team" and "Search Team" buttons side by side
             return (
-                <Pressable
-                    onPress={() => router.navigate('/create-team')}
-                    style={styles.teamContainer}
-                >
-                    <View style={styles.groupHeader}>
-                        <ImageBackground
-                            style={[styles.backgroundImageCreateTeam, Styles.buttonBackground]}
-                        >
-                            <Text style={Styles.buttonText}>Criar Equipa</Text>
-                        </ImageBackground>
-                    </View>
-                </Pressable>
+                <View style={styles.createAndSearchContainer}>
+                    <Pressable
+                        onPress={() => router.navigate('/create-team')}
+                        style={[styles.halfButton, styles.leftButton]}
+                    >
+                        <Text style={Styles.buttonText}>Criar Equipa</Text>
+                    </Pressable>
+                    <Pressable
+                        onPress={() => router.navigate('/search-teams')}
+                        style={[styles.halfButton, styles.rightButton]}
+                    >
+                        <Text style={Styles.buttonText}>Procurar Equipa</Text>
+                    </Pressable>
+                </View>
             );
         } else {
             // Render a team item
@@ -108,7 +110,7 @@ export default function MyTeams() {
                     <Text style={styles.loadingText}>Loading...</Text>
                 ) : (
                     <FlatList
-                        data={[...teams, null]} // Add null as the last item to represent the "Create Team" button
+                        data={[...teams, null]} // Add null as the last item to represent the "Create Team" and "Search Team" buttons
                         renderItem={renderItem}
                         keyExtractor={(item, index) =>
                             item ? item.id : `create-team-button-${index}`
@@ -151,11 +153,27 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         paddingRight: 10,
     },
-    backgroundImageCreateTeam: {
-        width: '100%',
+    createAndSearchContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+    },
+    halfButton: {
+        flex: 1,
         height: 150,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: Colors.darkBlue.buttons,
+    },
+    leftButton: {
+        borderTopLeftRadius: 10,
+        borderBottomLeftRadius: 10,
+        marginRight: 10,
+    },
+    rightButton: {
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        marginLeft: 10,
     },
     groupName: {
         fontSize: 24,

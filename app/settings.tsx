@@ -3,15 +3,15 @@ import { View, Text, Switch, StyleSheet, Pressable, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { auth, db } from '@/firebaseConfig';
 import NavigationBar from "@/components/NavigationBar";
-import TopBar from "@/components/TopBar";
-import { signOut } from "@firebase/auth";
-import { deleteUser } from '@firebase/auth';
+import TopBarReturn from "@/components/TopBarReturn";
+import { signOut, deleteUser } from "@firebase/auth";
 import { ref, remove } from 'firebase/database';
+import { Styles } from "@/constants/Styles";
 
 export default function SettingsScreen() {
     const router = useRouter();
     const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
-    const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(false);
+    const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(true);
 
     const toggleNotifications = () => setIsNotificationsEnabled(previousState => !previousState);
     const toggleDarkMode = () => setIsDarkModeEnabled(previousState => !previousState);
@@ -38,11 +38,8 @@ export default function SettingsScreen() {
         // TODO: Ask the user to confirm the account deletion
 
         try {
-            // Delete user data from Firebase Realtime Database
-            await remove(userRef);
-
-            // Delete the user account from Firebase Authentication
-            await deleteUser(user);
+            await remove(userRef);  // Delete user data from Firebase Realtime Database
+            await deleteUser(user); // Delete the user account from Firebase Authentication
 
             router.push('/login');
         } catch (error) {
@@ -53,48 +50,52 @@ export default function SettingsScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBar level={5} progress={0.5} games={10}/>
+            <TopBarReturn selected="home"/>
 
-            <Text style={styles.header}>Settings</Text>
+            <View style={Styles.pageContainer}>
 
-            {/* Notificações */}
-            <View style={styles.settingItem}>
-                <Text style={styles.settingText}>Enable Notifications</Text>
-                <Switch
-                    trackColor={{ false: '#767577', true: '#81b0ff' }}
-                    thumbColor={isNotificationsEnabled ? '#007BFF' : '#f4f3f4'}
-                    onValueChange={toggleNotifications}
-                    value={isNotificationsEnabled}
-                />
-            </View>
+                <Text style={styles.header}>Settings</Text>
 
-            {/* Modo Escuro */}
-            <View style={styles.settingItem}>
-                <Text style={styles.settingText}>Enable Dark Mode</Text>
-                <Switch
-                    trackColor={{ false: '#767577', true: '#81b0ff' }}
-                    thumbColor={isDarkModeEnabled ? '#007BFF' : '#f4f3f4'}
-                    onValueChange={toggleDarkMode}
-                    value={isDarkModeEnabled}
-                />
-            </View>
+                {/* Notifications */}
+                <View style={styles.settingItem}>
+                    <Text style={styles.settingText}>Enable Notifications</Text>
+                    <Switch
+                        trackColor={{ false: '#767577', true: '#81b0ff' }}
+                        thumbColor={isNotificationsEnabled ? '#007BFF' : '#f4f3f4'}
+                        onValueChange={toggleNotifications}
+                        value={isNotificationsEnabled}
+                    />
+                </View>
 
-            {/* Logout */}
-            <View style={styles.logoutButton}>
-                <Pressable onPress={ handleLogout }>
-                    <Text style={styles.logoutButtonText}>Logout</Text>
-                </Pressable>
-            </View>
+                {/* Dark Mode */}
+                <View style={styles.settingItem}>
+                    <Text style={styles.settingText}>Enable Dark Mode</Text>
+                    <Switch
+                        trackColor={{ false: '#767577', true: '#81b0ff' }}
+                        thumbColor={isDarkModeEnabled ? '#007BFF' : '#f4f3f4'}
+                        onValueChange={toggleDarkMode}
+                        value={isDarkModeEnabled}
+                    />
+                </View>
 
-            {/* Delete Account */}
-            <View style={styles.logoutButton}>
-                <Pressable onPress={ handleDeleteAccount }>
-                    <Text style={styles.logoutButtonText}>Delete Account</Text>
-                </Pressable>
+                {/* Logout */}
+                <View style={styles.logoutButton}>
+                    <Pressable onPress={handleLogout}>
+                        <Text style={styles.logoutButtonText}>Logout</Text>
+                    </Pressable>
+                </View>
+
+                {/* Delete Account */}
+                <View style={styles.logoutButton}>
+                    <Pressable onPress={handleDeleteAccount}>
+                        <Text style={styles.logoutButtonText}>Delete Account</Text>
+                    </Pressable>
+                </View>
+
             </View>
 
             {/* Barra de Navegação */}
-            <NavigationBar selected="profile" />
+            <NavigationBar selected="home"/>
         </View>
     );
 }
@@ -102,13 +103,14 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 60,
         backgroundColor: '#f8f8f8',
     },
     header: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 30,
+        color: '#ffffff',  // Lighter text color
+        textAlign: 'center',
     },
     settingItem: {
         flexDirection: 'row',
@@ -116,11 +118,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 15,
         borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
+        borderBottomColor: '#333',  // Darker border to match dark theme
     },
     settingText: {
         fontSize: 18,
-        color: '#333',
+        color: '#ffffff',  // Lighter text color
     },
     logoutButton: {
         marginTop: 40,
@@ -130,7 +132,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logoutButtonText: {
-        color: '#fff',
+        color: '#ffffff',
         fontSize: 18,
         fontWeight: 'bold',
     },
