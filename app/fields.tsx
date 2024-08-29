@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Pressable, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, Pressable, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import NavigationBar from "@/components/NavigationBar";
 import TopBarStats from "@/components/TopBarStats";
@@ -45,7 +45,10 @@ export default function FieldsScreen() {
     }, []);
 
     const renderItem = ({ item }: { item: Field }) => (
-        <Pressable style={styles.fieldContainer}>
+        <Pressable
+            style={styles.fieldContainer}
+            onPress={() => router.push(`/FieldDetailsScreen?id=${item.id}`)} // Passando o ID do campo na navegação
+        >
             <Image source={{ uri: item.image }} style={styles.fieldImage} />
             <View style={styles.overlay}>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -53,20 +56,21 @@ export default function FieldsScreen() {
                     <Text style={styles.fieldLocation}>{item.location}</Text>
                     <Text style={styles.fieldPrice}>{item.price}</Text>
                 </View>
-                <MaterialCommunityIcons name="heart" size={24} color="#fff" style={styles.favoriteIcon} />
+                <MaterialCommunityIcons name="heart-outline" size={28} color="#fff" style={styles.favoriteIcon} />
             </View>
         </Pressable>
     );
 
     return (
         <View style={styles.container}>
-            {/* Top Bar */}
             <TopBarStats />
 
-            {/* Content Section with Padding */}
             <View style={styles.contentContainer}>
                 {loading ? (
-                    <Text style={styles.loadingText}>Carregando...</Text>
+                    <View style={styles.loadingContainer}>
+                        <ActivityIndicator size="large" color="#007BFF" />
+                        <Text style={styles.loadingText}>Carregando campos...</Text>
+                    </View>
                 ) : (
                     <FlatList
                         data={fields}
@@ -77,7 +81,6 @@ export default function FieldsScreen() {
                 )}
             </View>
 
-            {/* Navigation Bar */}
             <NavigationBar selected="fields" />
         </View>
     );
@@ -86,11 +89,12 @@ export default function FieldsScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f8f8f8',
+        backgroundColor: '#F0F4F8',
     },
     contentContainer: {
         flex: 1,
         paddingTop: 60,
+        paddingHorizontal: 15,
     },
     list: {
         paddingBottom: 20,
@@ -98,11 +102,18 @@ const styles = StyleSheet.create({
     fieldContainer: {
         position: 'relative',
         marginBottom: 20,
+        borderRadius: 12,
+        overflow: 'hidden',
+        backgroundColor: '#FFF',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 2,
     },
     fieldImage: {
         width: '100%',
         height: 200,
-        borderRadius: 8,
     },
     overlay: {
         position: 'absolute',
@@ -111,14 +122,13 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
         justifyContent: 'space-between',
-        padding: 10,
-        backgroundColor: 'rgba(0, 0, 0, 0.4)', // Dark overlay on image
-        borderRadius: 8,
+        padding: 12,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     fieldName: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
-        color: '#fff',
+        color: '#FFF',
     },
     infoContainer: {
         flexDirection: 'row',
@@ -126,26 +136,27 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     fieldLocation: {
-        fontSize: 14,
-        color: '#fff',
+        fontSize: 16,
+        color: '#FFF',
     },
     fieldPrice: {
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: 'bold',
-        color: '#fff',
+        color: '#FFF',
     },
     favoriteIcon: {
         position: 'absolute',
-        top: 10,
-        right: 10,
-        width: 24,
-        height: 24,
-        tintColor: '#fff',  // Ensure the icon is visible on the dark overlay
+        top: 12,
+        right: 12,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     loadingText: {
-        fontSize: 18,
-        textAlign: 'center',
-        marginTop: 20,
+        fontSize: 16,
+        marginTop: 10,
         color: '#666',
     },
 });

@@ -33,6 +33,7 @@ export default function Layout() {
             <Tabs.Screen name="edit" options={{ title: 'Edit', headerShown: false }} />
             <Tabs.Screen name="preferences" options={{ title: 'Preferences', headerShown: false }} />
             <Tabs.Screen name="calendar" options={{ title: 'Calendar', headerShown: false }} />
+            <Tabs.Screen name="FieldDetailsScreen" options={{ title: 'Field', headerShown: false }} />
 
             {/* Game Screens */}
             <Tabs.Screen name="search-games" options={{ title: 'Search Games', headerShown: false }} />
