@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import NavigationBar from "@/components/NavigationBar";
-import TopBar from '../components/TopBar';
+import TopBarStats from "@/components/TopBarStats";
 import { useRouter } from "expo-router";
 import { auth, db } from '@/firebaseConfig';
 import { ref, get } from 'firebase/database';
-import TopBarStats from "@/components/TopBarStats";
+import { Styles } from "@/constants/Styles";
 
 export default function ProfileScreen() {
     const router = useRouter();
-    const [userProfile, setUserProfile] = useState(null);
+    const [userProfile, setUserProfile] = useState<any>(null);
+    const [profileImageUri, setProfileImageUri] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -19,7 +20,9 @@ export default function ProfileScreen() {
                     const userRef = ref(db, `users/${userId}`);
                     const snapshot = await get(userRef);
                     if (snapshot.exists()) {
-                        setUserProfile(snapshot.val());
+                        const userData = snapshot.val();
+                        setUserProfile(userData);
+                        setProfileImageUri(userData.profile.image || null);  // Fetch profile image URI
                     } else {
                         console.log("Nenhum dado encontrado para esse usuário.");
                     }
@@ -37,7 +40,7 @@ export default function ProfileScreen() {
     if (!userProfile) {
         return (
             <View style={styles.container}>
-                <Text>Carregando perfil...</Text>
+                <Text style={styles.loadingText}>Carregando perfil...</Text>
             </View>
         );
     }
@@ -59,78 +62,91 @@ export default function ProfileScreen() {
             {/* Top Bar */}
             <TopBarStats />
 
-            {/* Profile Section */}
-            <View style={styles.profileContainer}>
-                <View style={styles.profileHeader}>
-                    {/* Exibe as iniciais do nome do usuário caso não tenha uma imagem personalizada */}
-                    <View style={styles.profileInitials}>
-                        <Text style={styles.initialsText}>
-                            {userProfile.profile.name ? userProfile.profile.name.charAt(0) : '?'}
-                        </Text>
+            <View style={Styles.pageContainer}>
+
+                {/* Profile Section */}
+                <View style={styles.profileContainer}>
+
+                    {/* Exibe a imagem de perfil se disponível, caso contrário, mostra as iniciais */}
+                    <View style={styles.profileHeader}>
+                        {profileImageUri ? (
+                            <Image source={{ uri: profileImageUri }} style={styles.profileImage} />
+                        ) : (
+                            <View style={styles.profileInitials}>
+                                <Text style={styles.initialsText}>
+                                    {userProfile.profile.name ? userProfile.profile.name.charAt(0) : '?'}
+                                </Text>
+                            </View>
+                        )}
+
+                        {/* Nome do Usuário */}
+                        <Text style={styles.profileName}>{userProfile.profile.name} {userProfile.profile.surname}</Text>
+
+                        {/* Botão para adicionar localização */}
+                        <Pressable>
+                            <Text style={styles.addLocation}>Adicionar a minha localização</Text>
+                        </Pressable>
                     </View>
 
-                    {/* Nome do Usuário */}
-                    <Text style={styles.profileName}>{userProfile.profile.name} {userProfile.profile.surname}</Text>
-
-                    {/* Botão para adicionar localização */}
-                    <Pressable>
-                        <Text style={styles.addLocation}>Adicionar a minha localização</Text>
-                    </Pressable>
-                </View>
-
-                {/* Estatísticas do Perfil */}
-                <View style={styles.statsContainer}>
-                    <View style={styles.statBox}>
-                        <Text style={styles.statNumber}>{userProfile.stats.gamesPlayed || 0}</Text>
-                        <Text style={styles.statLabel}>Jogos</Text>
-                    </View>
-                    <View style={styles.statBox}>
-                        <Text style={styles.statNumber}>{userProfile.stats.followers || 0}</Text>
-                        <Text style={styles.statLabel}>Seguidores</Text>
-                    </View>
-                    <View style={styles.statBox}>
-                        <Text style={styles.statNumber}>{userProfile.stats.following || 0}</Text>
-                        <Text style={styles.statLabel}>A Seguir</Text>
-                    </View>
-                </View>
-
-                {/* Botões de Ação */}
-                <View style={styles.buttonContainer}>
-                    <Pressable style={styles.editButton} onPress={ handleEditProfile }>
-                        <Text style={styles.editButtonText}>Editar perfil</Text>
-                    </Pressable>
-
-                    <Pressable style={styles.premiumButton} onPress={ handleBecomePremium }>
-                        <Text style={styles.premiumButtonText}>Torne-se Premium</Text>
-                    </Pressable>
-                </View>
-
-                {/* Seção de Preferências do Jogador */}
-                <View style={styles.preferencesContainer}>
-                    <View style={styles.preferencesHeader}>
-                        <Text style={styles.preferencesTitle}>Preferências do Jogador</Text>
-                        <Text style={styles.editText} onPress={handleEditPreferences}>Editar</Text>
+                    {/* Estatísticas do Perfil */}
+                    <View style={styles.statsContainer}>
+                        <View style={styles.statBox}>
+                            <Text style={styles.statNumber}>{userProfile.stats.gamesPlayed || 0}</Text>
+                            <Text style={styles.statLabel}>Jogos</Text>
+                        </View>
+                        <View style={styles.statBox}>
+                            <Text style={styles.statNumber}>{userProfile.stats.followers || 0}</Text>
+                            <Text style={styles.statLabel}>Seguidores</Text>
+                        </View>
+                        <View style={styles.statBox}>
+                            <Text style={styles.statNumber}>{userProfile.stats.following || 0}</Text>
+                            <Text style={styles.statLabel}>A Seguir</Text>
+                        </View>
                     </View>
 
-                    <View style={styles.preferenceItem}>
-                        <Text style={styles.preferenceLabel}>🦶 Pé Dominante:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences?.dominantFoot || 'Não definido'}</Text>
+                    {/* Botões de Ação */}
+                    <View style={styles.buttonContainer}>
+                        <Pressable style={styles.editButton} onPress={handleEditProfile}>
+                            <Text style={styles.editButtonText}>Editar perfil</Text>
+                        </Pressable>
+
+                        <Pressable style={styles.premiumButton} onPress={handleBecomePremium}>
+                            <Text style={styles.premiumButtonText}>Torne-se Premium</Text>
+                        </Pressable>
                     </View>
 
-                    <View style={styles.preferenceItem}>
-                        <Text style={styles.preferenceLabel}>🧩 Posição no Campo:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences?.position || 'Não definido'}</Text>
+                    {/* Seção de Preferências do Jogador */}
+                    <View style={styles.preferencesContainer}>
+                        <View style={styles.preferencesHeader}>
+                            <Text style={styles.preferencesTitle}>Preferências do Jogador</Text>
+                            <Text style={styles.editText} onPress={handleEditPreferences}>Editar</Text>
+                        </View>
+
+                        <View style={styles.preferenceItem}>
+                            <Text style={styles.preferenceLabel}>🦶 Pé Dominante:</Text>
+                            <Text
+                                style={styles.preferenceValue}>{userProfile.preferences?.dominantFoot || 'Não definido'}</Text>
+                        </View>
+
+                        <View style={styles.preferenceItem}>
+                            <Text style={styles.preferenceLabel}>🧩 Posição no Campo:</Text>
+                            <Text
+                                style={styles.preferenceValue}>{userProfile.preferences?.position || 'Não definido'}</Text>
+                        </View>
+
+                        <View style={styles.preferenceItem}>
+                            <Text style={styles.preferenceLabel}>🏟️ Tipo de Jogo:</Text>
+                            <Text
+                                style={styles.preferenceValue}>{userProfile.preferences?.gameType || 'Não definido'}</Text>
+                        </View>
+
+                        <View style={styles.preferenceItem}>
+                            <Text style={styles.preferenceLabel}>🕒 Horários Preferidos:</Text>
+                            <Text
+                                style={styles.preferenceValue}>{userProfile.preferences?.preferredTimes || 'Não definido'}</Text>
+                        </View>
                     </View>
 
-                    <View style={styles.preferenceItem}>
-                        <Text style={styles.preferenceLabel}>🏟️ Tipo de Jogo:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences?.gameType || 'Não definido'}</Text>
-                    </View>
-
-                    <View style={styles.preferenceItem}>
-                        <Text style={styles.preferenceLabel}>🕒 Horários Preferidos:</Text>
-                        <Text style={styles.preferenceValue}>{userProfile.preferences?.preferredTimes || 'Não definido'}</Text>
-                    </View>
                 </View>
 
             </View>
@@ -144,7 +160,13 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#191524',  // Set background to dark color
+    },
+    loadingText: {
+        color: '#fff',
+        fontSize: 16,
+        textAlign: 'center',
+        marginTop: 20,
     },
     profileContainer: {
         paddingTop: 60,
@@ -177,7 +199,7 @@ const styles = StyleSheet.create({
     profileName: {
         fontSize: 22,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#ffffff',  // Set text color to white
         marginBottom: 5,
     },
     addLocation: {
@@ -195,11 +217,11 @@ const styles = StyleSheet.create({
     statNumber: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#ffffff',  // Set text color to white
     },
     statLabel: {
         fontSize: 14,
-        color: '#777',
+        color: '#cccccc',  // Set text color to a lighter shade for contrast
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -212,11 +234,11 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: '#333',
+        borderColor: '#ffffff',  // Set border color to white
         alignItems: 'center',
     },
     editButtonText: {
-        color: '#333',
+        color: '#ffffff',  // Set text color to white
         fontSize: 16,
         fontWeight: 'bold',
     },
@@ -237,7 +259,7 @@ const styles = StyleSheet.create({
     /* Preferences Section */
     preferencesContainer: {
         padding: 20,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#191524',  // Match the dark background color
     },
     preferencesHeader: {
         flexDirection: 'row',
@@ -248,7 +270,7 @@ const styles = StyleSheet.create({
     preferencesTitle: {
         fontSize: 26,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#ffffff',  // Set text color to white
     },
     editText: {
         fontSize: 16,
@@ -263,10 +285,10 @@ const styles = StyleSheet.create({
     },
     preferenceLabel: {
         fontSize: 20,
-        color: '#333',
+        color: '#ffffff',  // Set text color to white
     },
     preferenceValue: {
         fontSize: 20,
-        color: '#555',
+        color: '#cccccc',  // Set text color to a lighter shade for contrast
     },
 });

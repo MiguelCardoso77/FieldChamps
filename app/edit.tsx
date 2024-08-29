@@ -1,22 +1,55 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, Image } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { auth, db } from '@/firebaseConfig';
-import { ref, update } from "firebase/database";
-import { useRouter } from "expo-router";
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, TextInput, Pressable, Image} from 'react-native';
+import {auth, db} from '@/firebaseConfig';
+import {ref, get, update} from "firebase/database";
+import {useRouter} from "expo-router";
+import TopBarReturn from "@/components/TopBarReturn";
+import {Styles} from "@/constants/Styles";
+import NavigationBar from "@/components/NavigationBar";
 
 export default function Edit() {
     const router = useRouter();
-    const [name, setName] = useState('Miguel');
-    const [surname, setSurname] = useState('Cardoso');
-    const [email, setEmail] = useState('miguel@example.com');
-    const [phoneCode, setPhoneCode] = useState('+351');
-    const [phone, setPhone] = useState('123456789');
-    const [gender, setGender] = useState('Masculino');
-    const [birthDate, setBirthDate] = useState('01/01/1990');
-    const [description, setDescription] = useState('Descrição do perfil');
-    const [country, setCountry] = useState('Portugal');
-    const [image, setImage] = useState(require('../assets/images/profile.png'));
+
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [email, setEmail] = useState('');
+    const [phoneCode, setPhoneCode] = useState('');
+    const [phone, setPhone] = useState('');
+    const [gender, setGender] = useState('');
+    const [birthDate, setBirthDate] = useState('');
+    const [description, setDescription] = useState('');
+    const [country, setCountry] = useState('');
+    const [image, setImage] = useState('');
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userId = auth.currentUser?.uid;
+                if (userId) {
+                    const userRef = ref(db, `users/${userId}/profile`);
+                    const snapshot = await get(userRef);
+
+                    if (snapshot.exists()) {
+                        const userData = snapshot.val();
+                        setName(userData.name || '');
+                        setSurname(userData.surname || '');
+                        setEmail(userData.email || '');
+                        setPhoneCode(userData.phoneCode || '');
+                        setPhone(userData.phone || '');
+                        setGender(userData.gender || '');
+                        setBirthDate(userData.birthDate || '');
+                        setDescription(userData.description || '');
+                        setCountry(userData.country || '');
+                        setImage(userData.image || ''); // Use userData.image instead of userData.profileImageUri
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching user data: ", error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
     const handleSave = async () => {
         try {
@@ -32,7 +65,7 @@ export default function Edit() {
                 birthDate,
                 description,
                 country,
-                image: 'profile_image_url_placeholder',
+                image,  // Save the image using the correct key
             });
 
             console.log('Profile updated:', { name, email });
@@ -45,98 +78,114 @@ export default function Edit() {
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>Edit Profile</Text>
-            </View>
+            {/* Top Bar */}
+            <TopBarReturn selected={'profile'} />
 
-            { /* Imagem de perfil */ }
-            <View style={styles.profileImageContainer}>
-                <Image source={image} style={styles.profileImage} />
-                <Pressable style={styles.changeImageButton}>
-                    <MaterialCommunityIcons name="camera" size={24} color="#007BFF" />
+            <View style={Styles.pageContainer}>
+
+                {/* Imagem de perfil */}
+                <View style={styles.profileImageContainer}>
+                    {image ? (
+                        <Image source={{ uri: image }} style={styles.profileImage} />
+                    ) : (
+                        <View style={styles.profilePlaceholder}>
+                            <Text style={styles.placeholderText}>No Image</Text>
+                        </View>
+                    )}
+                </View>
+
+                {/* Nome */}
+                <TextInput
+                    style={styles.input}
+                    value={name}
+                    onChangeText={setName}
+                    placeholder="Nome"
+                />
+
+                {/* Apelido */}
+                <TextInput
+                    style={styles.input}
+                    value={surname}
+                    onChangeText={setSurname}
+                    placeholder="Apelido"
+                />
+
+                {/* Email */}
+                <TextInput
+                    style={styles.input}
+                    value={email}
+                    onChangeText={setEmail}
+                    placeholder="Email"
+                    keyboardType="email-address"
+                />
+
+                {/* Número de telefone */}
+                <View style={styles.inputRow}>
+                    <TextInput
+                        style={[styles.input, styles.inputHalf]}
+                        value={phoneCode}
+                        onChangeText={setPhoneCode}
+                        placeholder="Código País"
+                    />
+                    <TextInput
+                        style={[styles.input, styles.inputHalf]}
+                        value={phone}
+                        onChangeText={setPhone}
+                        placeholder="Telefone"
+                    />
+                </View>
+
+                {/* Género */}
+                <TextInput
+                    style={styles.input}
+                    value={gender}
+                    onChangeText={setGender}
+                    placeholder="Género"
+                />
+
+                {/* Data de Nascimento */}
+                <TextInput
+                    style={styles.input}
+                    value={birthDate}
+                    onChangeText={setBirthDate}
+                    placeholder="Data de Nascimento"
+                />
+
+                {/* Descrição */}
+                <TextInput
+                    style={styles.input}
+                    value={description}
+                    onChangeText={setDescription}
+                    placeholder="Descrição"
+                    multiline
+                    numberOfLines={4}
+                />
+
+                {/* País */}
+                <TextInput
+                    style={styles.input}
+                    value={country}
+                    onChangeText={setCountry}
+                    placeholder="País de Residência"
+                />
+
+                {/* Image URI Input */}
+                <TextInput
+                    style={styles.input}
+                    value={image}
+                    onChangeText={setImage}
+                    placeholder="Profile Image URI"
+                />
+
+                {/* Botão de guardar */}
+                <Pressable style={styles.saveButton} onPress={handleSave}>
+                    <Text style={styles.saveButtonText}>Save</Text>
                 </Pressable>
+
             </View>
 
-            { /* Nome */ }
-            <TextInput
-                style={styles.input}
-                value={name}
-                onChangeText={setName}
-                placeholder="Nome"
-            />
-
-            { /* Apelido */ }
-            <TextInput
-                style={styles.input}
-                value={surname}
-                onChangeText={setSurname}
-                placeholder="Apelido"
-            />
-
-            { /* Email */ }
-            <TextInput
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Email"
-                keyboardType="email-address"
-            />
-
-            { /* Número de telefone */ }
-            <View style={styles.inputRow}>
-                <TextInput
-                    style={[styles.input, styles.inputHalf]}
-                    value={phoneCode}
-                    onChangeText={setPhoneCode}
-                    placeholder="Código País"
-                />
-                <TextInput
-                    style={[styles.input, styles.inputHalf]}
-                    value={phone}
-                    onChangeText={setPhone}
-                    placeholder="Telefone"
-                />
-            </View>
-
-            { /* Género */ }
-            <TextInput
-                style={styles.input}
-                value={gender}
-                onChangeText={setGender}
-                placeholder="Género"
-            />
-
-            { /* Data de Nascimento */ }
-            <TextInput
-                style={styles.input}
-                value={birthDate}
-                onChangeText={setBirthDate}
-                placeholder="Data de Nascimento"
-            />
-
-            { /* Descrição */ }
-            <TextInput
-                style={styles.input}
-                value={description}
-                onChangeText={setDescription}
-                placeholder="Descrição"
-                multiline
-                numberOfLines={4}
-            />
-
-            { /* País */ }
-            <TextInput
-                style={styles.input}
-                value={country}
-                onChangeText={setCountry}
-                placeholder="País de Residência"
-            />
-
-            { /* Botão de guardar */ }
-            <Pressable style={styles.saveButton} onPress={handleSave}>
-                <Text style={styles.saveButtonText}>Save</Text>
-            </Pressable>
-
+            {/* Navigation Bar */}
+            <NavigationBar selected="profile" />
         </View>
     );
 }
@@ -145,7 +194,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f5f5f5',
-        padding: 20,
     },
     header: {
         marginBottom: 20,
@@ -158,7 +206,6 @@ const styles = StyleSheet.create({
     profileImageContainer: {
         alignItems: 'center',
         marginBottom: 20,
-        position: 'relative',
     },
     profileImage: {
         width: 120,
@@ -168,18 +215,18 @@ const styles = StyleSheet.create({
         borderColor: '#007BFF',
         marginBottom: 10,
     },
-    changeImageButton: {
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
-        backgroundColor: '#fff',
-        borderRadius: 50,
-        padding: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 3,
+    profilePlaceholder: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        borderWidth: 3,
+        borderColor: '#ddd',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 10,
+    },
+    placeholderText: {
+        color: '#aaa',
     },
     input: {
         backgroundColor: '#fff',
@@ -210,7 +257,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 20,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
+        shadowOffset: {width: 0, height: 3},
         shadowOpacity: 0.3,
         shadowRadius: 5,
         elevation: 3,
