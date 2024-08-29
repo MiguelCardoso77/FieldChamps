@@ -104,7 +104,7 @@ export default function GameDetailScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBarReturn selected={'upload-game'} />
+            <TopBarReturn selected={'upload-game'} title={'Detalhes do Jogo'} />
 
             <View style={Styles.pageContainer}>
                 <Image source={{ uri: game.image }} style={styles.gameImage} />

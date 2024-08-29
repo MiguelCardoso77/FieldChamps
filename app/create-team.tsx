@@ -70,7 +70,7 @@ export default function CreateTeamScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBarReturn selected={'myteams'} />
+            <TopBarReturn selected={'myteams'} title={'Criar Equipa'} />
 
             <View style={Styles.pageContainer}>
 

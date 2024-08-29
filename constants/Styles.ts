@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 
 export const Styles = StyleSheet.create({
@@ -16,6 +16,15 @@ export const Styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
     },
+
+    title: {
+        color: '#ffffff',
+        fontSize: 22,
+        textAlign: 'center',
+        flex: 1,
+        fontFamily: 'ahronbd',
+    },
+
     pageContainer: {
         flex: 1,
         backgroundColor: Colors.darkBlue.background,

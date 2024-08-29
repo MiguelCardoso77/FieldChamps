@@ -73,7 +73,7 @@ export default function SearchTeamsScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBarReturn selected="myteams"/>
+            <TopBarReturn selected={'myteams'} title={'Procurar Equipa'} />
 
             <View style={Styles.pageContainer}>
                 <TextInput

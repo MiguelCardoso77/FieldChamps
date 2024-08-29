@@ -1,11 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TextInput, Pressable, Image} from 'react-native';
-import {auth, db} from '@/firebaseConfig';
-import {ref, get, update} from "firebase/database";
-import {useRouter} from "expo-router";
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, Pressable, Image, ScrollView } from 'react-native';
+import { auth, db } from '@/firebaseConfig';
+import { ref, get, update } from "firebase/database";
+import { useRouter } from "expo-router";
 import TopBarReturn from "@/components/TopBarReturn";
-import {Styles} from "@/constants/Styles";
+import { Styles } from "@/constants/Styles";
 import NavigationBar from "@/components/NavigationBar";
+import { Picker } from '@react-native-picker/picker';
+import { countries } from '@/constants/Lists'; // Adjust the path based on your project structure
 
 export default function Edit() {
     const router = useRouter();
@@ -77,9 +79,9 @@ export default function Edit() {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             {/* Top Bar */}
-            <TopBarReturn selected={'profile'} />
+            <TopBarReturn selected={'profile'} title={'Editar Perfil'} />
 
             <View style={Styles.pageContainer}>
 
@@ -93,6 +95,14 @@ export default function Edit() {
                         </View>
                     )}
                 </View>
+
+                {/* Image URI Input */}
+                <TextInput
+                    style={styles.input}
+                    value={image}
+                    onChangeText={setImage}
+                    placeholder="Profile Image URI"
+                />
 
                 {/* Nome */}
                 <TextInput
@@ -136,12 +146,17 @@ export default function Edit() {
                 </View>
 
                 {/* Género */}
-                <TextInput
-                    style={styles.input}
-                    value={gender}
-                    onChangeText={setGender}
-                    placeholder="Género"
-                />
+                <View style={styles.pickerContainer}>
+                    <Picker
+                        selectedValue={gender}
+                        onValueChange={(itemValue) => setGender(itemValue)}
+                        style={styles.picker}
+                    >
+                        <Picker.Item label="Masculino" value="Masculino" />
+                        <Picker.Item label="Feminino" value="Feminino" />
+                        <Picker.Item label="Outro" value="Outro" />
+                    </Picker>
+                </View>
 
                 {/* Data de Nascimento */}
                 <TextInput
@@ -162,20 +177,17 @@ export default function Edit() {
                 />
 
                 {/* País */}
-                <TextInput
-                    style={styles.input}
-                    value={country}
-                    onChangeText={setCountry}
-                    placeholder="País de Residência"
-                />
-
-                {/* Image URI Input */}
-                <TextInput
-                    style={styles.input}
-                    value={image}
-                    onChangeText={setImage}
-                    placeholder="Profile Image URI"
-                />
+                <View style={styles.pickerContainer}>
+                    <Picker
+                        selectedValue={country}
+                        onValueChange={(itemValue) => setCountry(itemValue)}
+                        style={styles.picker}
+                    >
+                        {countries.map((country, index) => (
+                            <Picker.Item key={index} label={country} value={country} />
+                        ))}
+                    </Picker>
+                </View>
 
                 {/* Botão de guardar */}
                 <Pressable style={styles.saveButton} onPress={handleSave}>
@@ -186,7 +198,7 @@ export default function Edit() {
 
             {/* Navigation Bar */}
             <NavigationBar selected="profile" />
-        </View>
+        </ScrollView>
     );
 }
 
@@ -246,9 +258,16 @@ const styles = StyleSheet.create({
         flex: 1,
         marginRight: 10,
     },
-    text: {
-        fontSize: 16,
-        color: '#333',
+    pickerContainer: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        borderColor: '#ddd',
+        borderWidth: 1,
+        marginBottom: 15,
+    },
+    picker: {
+        height: 50,
+        width: '100%',
     },
     saveButton: {
         backgroundColor: '#007BFF',
@@ -257,7 +276,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 20,
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: 3},
+        shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.3,
         shadowRadius: 5,
         elevation: 3,

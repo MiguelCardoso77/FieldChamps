@@ -65,7 +65,8 @@ export default function FieldDetailScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBarReturn selected={'fields'}/>
+            <TopBarReturn selected={'fields'} title={'Detalhes do Campo'} />
+
             <View style={Styles.pageContainer}>
                 <Image source={{uri: field.image}} style={styles.fieldImage}/>
                 <View style={styles.infoContainer}>
@@ -76,6 +77,7 @@ export default function FieldDetailScreen() {
                     <Text style={styles.fieldDescription}>{field.description}</Text>
                 </View>
             </View>
+
             {/* Navigation Bar */}
             <NavigationBar selected="fields"/>
         </View>

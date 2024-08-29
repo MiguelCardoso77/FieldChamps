@@ -1,9 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, StyleSheet, ImageBackground } from 'react-native';
+import * as Font from 'expo-font';
 import { useRouter } from 'expo-router';
+
+const fetchFonts = () => {
+    return Font.loadAsync({
+        'Ahronbd': require('@/assets/fonts/ahronbd.ttf'),
+    });
+};
 
 export default function HomeScreen() {
     const router = useRouter();
+    const [fontLoaded, setFontLoaded] = useState(false);
+
+    useEffect(() => {
+        const loadFonts = async () => {
+            try {
+                await fetchFonts();
+                setFontLoaded(true);
+            } catch (error) {
+                console.error('Error loading fonts:', error);
+            }
+        };
+
+        loadFonts();
+    }, []);
+
+    if (!fontLoaded) {
+        return (
+            <View style={styles.loadingContainer}>
+                <Text style={styles.loadingText}>Loading...</Text>
+            </View>
+        );
+    }
 
     return (
         <ImageBackground
@@ -87,5 +116,15 @@ const styles = StyleSheet.create({
         marginTop: 20,
         color: '#ffffff',
         fontSize: 12,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#000000',
+    },
+    loadingText: {
+        color: '#ffffff',
+        fontSize: 18,
     },
 });

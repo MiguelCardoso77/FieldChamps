@@ -50,7 +50,7 @@ export default function SettingsScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBarReturn selected="home"/>
+            <TopBarReturn selected={'home'} title={'Definições'} />
 
             <View style={Styles.pageContainer}>
 

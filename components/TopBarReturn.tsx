@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, Pressable, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Pressable, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import {Styles} from "@/constants/Styles";
 
 interface TopBarReturnProps {
     selected: string;
+    title: string;
 }
 
-export default function TopBarReturn({ selected }: TopBarReturnProps) {
+export default function TopBarReturn({ selected, title }: TopBarReturnProps) {
     const router = useRouter();
 
     return (
@@ -21,6 +23,9 @@ export default function TopBarReturn({ selected }: TopBarReturnProps) {
                 >
                     <MaterialCommunityIcons name="arrow-left" size={28} color="#ffffff" />
                 </Pressable>
+
+                {/* Title */}
+                <Text style={Styles.title}>{title}</Text>
 
                 {/* Notifications and Settings Buttons */}
                 <View style={styles.rightIconsContainer}>

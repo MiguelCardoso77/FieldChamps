@@ -29,7 +29,7 @@ export default function NotificationsScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBarReturn selected="home"/>
+            <TopBarReturn selected={'home'} title={'Notificações'} />
 
             <View style={Styles.pageContainer}>
                 <Text style={styles.header}>Notifications</Text>
