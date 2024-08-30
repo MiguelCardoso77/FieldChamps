@@ -42,7 +42,7 @@ export default function Layout() {
 
             {/* Team Screens */}
             <Tabs.Screen name="create-team" options={{ title: 'Create Team', headerShown: false }} />
-            <Tabs.Screen name="team" options={{ title: 'Team', headerShown: false }} />
+            <Tabs.Screen name="TeamDetailsScreen" options={{ title: 'Team Details', headerShown: false }} />
             <Tabs.Screen name="SearchTeamsScreen" options={{ title: 'Search Teams', headerShown: false }} />
 
         </Tabs>

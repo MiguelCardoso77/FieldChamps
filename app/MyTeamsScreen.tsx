@@ -92,7 +92,7 @@ export default function MyTeamsScreen() {
             return (
                 <Pressable
                     style={styles.teamContainer}
-                    onPress={() => router.push(`/team`)}
+                    onPress={() => router.push(`/TeamDetailsScreen?id=${item.id}`)}
                 >
                     <View style={styles.groupHeader}>
                         <ImageBackground
