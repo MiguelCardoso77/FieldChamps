@@ -23,7 +23,7 @@ export default function Layout() {
             <Tabs.Screen name="MyTeamsScreen" options={{ title: 'My Teams', headerShown: false }} />
             <Tabs.Screen name="fields" options={{ title: 'Fields', headerShown: false }} />
             <Tabs.Screen name="upload-game" options={{ title: 'Upload Game', headerShown: false }} />
-            <Tabs.Screen name="profile" options={{ title: 'Profile', headerShown: false }} />
+            <Tabs.Screen name="ProfileScreen" options={{ title: 'Profile', headerShown: false }} />
 
             {/* Settings Screens */}
             <Tabs.Screen name="notifications" options={{ title: 'Notifications', headerShown: false }} />

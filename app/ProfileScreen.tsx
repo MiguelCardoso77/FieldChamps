@@ -57,6 +57,18 @@ export default function ProfileScreen() {
         router.push('/preferences');
     }
 
+    const getTrustFactorColor = (trustFactor: number) => {
+        if (trustFactor < 1.0) {
+            return '#FF0000'; // Red
+        } else if (trustFactor >= 1.0 && trustFactor < 2.0) {
+            return '#FFFF00'; // Yellow
+        } else if (trustFactor >= 2.0 && trustFactor < 4.5) {
+            return '#00FF00'; // Green
+        } else {
+            return '#0000FF'; // Blue
+        }
+    };
+
     return (
         <View style={styles.container}>
             {/* Top Bar */}
@@ -102,6 +114,19 @@ export default function ProfileScreen() {
                             <Text style={styles.statNumber}>{userProfile.stats.following || 0}</Text>
                             <Text style={styles.statLabel}>A Seguir</Text>
                         </View>
+                    </View>
+
+                    {/* Trust Factor */}
+                    <View style={styles.trustFactorContainer}>
+                        <Text style={styles.trustFactorLabel}>Trust Factor:</Text>
+                        <Text
+                            style={[
+                                styles.trustFactorValue,
+                                { color: getTrustFactorColor(userProfile.trustFactor) } // Apply dynamic color
+                            ]}
+                        >
+                            {userProfile.trustFactor.toFixed(1)}
+                        </Text>
                     </View>
 
                     {/* Botões de Ação */}
@@ -152,7 +177,7 @@ export default function ProfileScreen() {
             </View>
 
             {/* Barra de Navegação */}
-            <NavigationBar selected="profile" />
+            <NavigationBar selected="ProfileScreen" />
         </View>
     );
 }
@@ -290,5 +315,20 @@ const styles = StyleSheet.create({
     preferenceValue: {
         fontSize: 20,
         color: '#cccccc',  // Set text color to a lighter shade for contrast
+    },
+
+    /* Trust Factor Section */
+    trustFactorContainer: {
+        marginTop: 20,
+        alignItems: 'center',
+    },
+    trustFactorLabel: {
+        fontSize: 18,
+        color: '#ffffff',
+        marginBottom: 5,
+    },
+    trustFactorValue: {
+        fontSize: 22,
+        fontWeight: 'bold',
     },
 });

@@ -53,6 +53,10 @@ export default function RegisterScreen() {
             teamIdSlot2: "",
             teamIdSlot3: "",
         });
+
+        await set(ref(db, `/users/${userId}`), {
+            trustFactor: 1.0,
+        });
     }
 
     const handleRegister = async () => {

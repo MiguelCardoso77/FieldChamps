@@ -71,7 +71,7 @@ export default function Edit() {
             });
 
             console.log('Profile updated:', { name, email });
-            router.push('/profile');
+            router.push('/ProfileScreen');
 
         } catch (error) {
             console.error("Error saving user data: ", error);
@@ -81,7 +81,7 @@ export default function Edit() {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             {/* Top Bar */}
-            <TopBarReturn selected={'profile'} title={'Editar Perfil'} />
+            <TopBarReturn selected={'ProfileScreen'} title={'Editar Perfil'} />
 
             <View style={Styles.pageContainer}>
 
@@ -197,7 +197,7 @@ export default function Edit() {
             </View>
 
             {/* Navigation Bar */}
-            <NavigationBar selected="profile" />
+            <NavigationBar selected="ProfileScreen" />
         </ScrollView>
     );
 }

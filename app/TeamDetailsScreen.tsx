@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, FlatList, Image, Pressable, Modal, ActivityIndicator} from 'react-native';
 import {useRouter, useLocalSearchParams} from 'expo-router';
 import {db} from '@/firebaseConfig';
-import {ref, get } from "firebase/database";
+import {ref, get} from "firebase/database";
 import NavigationBar from "@/components/NavigationBar";
 import {Styles} from "@/constants/Styles";
 import TopBarReturn from "@/components/TopBarReturn";
@@ -24,6 +24,11 @@ type Team = {
     ties: number;
     losses: number;
     players: Player[];
+    creationDate: string;
+    description: string;
+    image: string;
+    location: string;
+    memberCount: number;
 };
 
 export default function TeamScreen() {
@@ -52,11 +57,16 @@ export default function TeamScreen() {
 
                     setTeam({
                         id: id as string,
-                        name: teamData.name,
+                        name: teamData.teamName,
                         wins: statsData?.wins || 0,
                         ties: statsData?.ties || 0,
                         losses: statsData?.losses || 0,
                         players: teamData.players || [],
+                        creationDate: teamData.teamCreationDate || 'N/A',
+                        description: teamData.teamDescription || 'No description available.',
+                        image: teamData.teamImage || '',
+                        location: teamData.teamLocation || 'Unknown location',
+                        memberCount: teamData.teamMemberCount || 0,
                     });
                 } else {
                     setTeam(null);
@@ -87,10 +97,6 @@ export default function TeamScreen() {
         setSelectedPlayer(null);
     };
 
-    const handleCreateTeamPress = () => {
-        router.push('/create-team');
-    };
-
     if (loading) {
         return (
             <View style={styles.loadingContainer}>
@@ -116,6 +122,21 @@ export default function TeamScreen() {
             <View style={Styles.pageContainer}>
 
                 <Text style={styles.header}>{team.name}</Text>
+
+                {/* Team Image */}
+                <Image source={{uri: team.image}} style={styles.teamImage}/>
+
+                {/* Team Description */}
+                <Text style={styles.description}>{team.description}</Text>
+
+                {/* Team Location */}
+                <Text style={styles.location}>Localização: {team.location}</Text>
+
+                {/* Team Creation Date */}
+                <Text style={styles.creationDate}>Criado em: {new Date(team.creationDate).toLocaleDateString()}</Text>
+
+                {/* Team Member Count */}
+                <Text style={styles.memberCount}>Número de Membros: {team.memberCount}</Text>
 
                 {/* Team Statistics */}
                 <View style={styles.statsContainer}>
@@ -198,25 +219,54 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 28,
         fontWeight: 'bold',
-        color: '#ffffff', // Light text color
+        color: '#ffffff',
         marginBottom: 20,
         textAlign: 'center',
+    },
+    teamImage: {
+        width: '100%',
+        height: 200,
+        marginBottom: 15,
+    },
+    description: {
+        fontSize: 16,
+        color: '#cccccc',
+        marginHorizontal: 15,
+        marginBottom: 10,
+    },
+    location: {
+        fontSize: 16,
+        color: '#ffffff',
+        marginHorizontal: 15,
+        marginBottom: 10,
+    },
+    creationDate: {
+        fontSize: 16,
+        color: '#ffffff',
+        marginHorizontal: 15,
+        marginBottom: 10,
+    },
+    memberCount: {
+        fontSize: 16,
+        color: '#ffffff',
+        marginHorizontal: 15,
+        marginBottom: 20, // Add extra margin if needed
     },
     playerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 15,
         marginBottom: 12,
-        backgroundColor: '#2a2a2a', // Slightly contrasting background
+        backgroundColor: '#2a2a2a',
         borderRadius: 8,
         shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 6,
         elevation: 5,
     },
     captainContainer: {
-        backgroundColor: '#FFD700', // Gold color for captain
+        backgroundColor: '#FFD700',
     },
     playerImage: {
         width: 60,
@@ -249,7 +299,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 8,
         elevation: 10,
@@ -299,7 +349,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        borderWidth: 8, // Increased border width
+        borderWidth: 8,
         borderColor: '#4caf50',
         justifyContent: 'center',
         alignItems: 'center',
@@ -310,7 +360,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        borderWidth: 8, // Increased border width
+        borderWidth: 8,
         borderColor: '#ffeb3b',
         justifyContent: 'center',
         alignItems: 'center',
@@ -321,7 +371,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        borderWidth: 8, // Increased border width
+        borderWidth: 8,
         borderColor: '#f44336',
         justifyContent: 'center',
         alignItems: 'center',
@@ -331,12 +381,12 @@ const styles = StyleSheet.create({
     statNumber: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#ffffff', // Light text color
+        color: '#ffffff',
     },
     statLabel: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#ffffff', // Light text color
+        color: '#ffffff',
     },
     createTeamButton: {
         backgroundColor: '#007bff',
@@ -355,7 +405,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#1a1a1a', // Dark background
+        backgroundColor: '#1a1a1a',
     },
     loadingText: {
         color: '#ffffff',
@@ -366,7 +416,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#1a1a1a', // Dark background
+        backgroundColor: '#1a1a1a',
     },
     errorText: {
         color: '#ff6b6b',

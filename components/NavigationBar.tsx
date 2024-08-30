@@ -65,7 +65,7 @@ export default function NavigationBar({ selected }: NavigationBarProps) {
             {/* Profile Button */}
             <Pressable
                 style={styles.menuButton}
-                onPress={() => router.push('/profile')}
+                onPress={() => router.push('/ProfileScreen')}
             >
                 <MaterialCommunityIcons
                     name={selected === 'profile' ? 'account' : 'account-outline'}
