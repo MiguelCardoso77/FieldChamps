@@ -64,13 +64,13 @@ export default function CreateTeamScreen() {
 
         Alert.alert('Sucesso', `Equipa "${teamName}" criada com sucesso!`);
 
-        router.push('/myteams');
+        router.push('/MyTeamsScreen');
     };
 
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBarReturn selected={'myteams'} title={'Criar Equipa'} />
+            <TopBarReturn selected={'MyTeamsScreen'} title={'Criar Equipa'} />
 
             <View style={Styles.pageContainer}>
 

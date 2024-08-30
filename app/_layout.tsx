@@ -20,7 +20,7 @@ export default function Layout() {
 
             {/* App Screens */}
             <Tabs.Screen name="home" options={{ title: 'Home', headerShown: false }} />
-            <Tabs.Screen name="myteams" options={{ title: 'My Teams', headerShown: false }} />
+            <Tabs.Screen name="MyTeamsScreen" options={{ title: 'My Teams', headerShown: false }} />
             <Tabs.Screen name="fields" options={{ title: 'Fields', headerShown: false }} />
             <Tabs.Screen name="upload-game" options={{ title: 'Upload Game', headerShown: false }} />
             <Tabs.Screen name="profile" options={{ title: 'Profile', headerShown: false }} />

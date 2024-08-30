@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import NavigationBar from "@/components/NavigationBar";
 import { View, Text, StyleSheet, Pressable, ImageBackground, FlatList } from 'react-native';
 import TopBarStats from "@/components/TopBarStats";
 import { Styles } from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import { onValue, ref } from "firebase/database";
-import { db } from "@/firebaseConfig";
+import { auth, db } from "@/firebaseConfig";
 import { Colors } from "@/constants/Colors";
 
 type Team = {
@@ -15,38 +15,49 @@ type Team = {
     teamImage: string;
 };
 
-export default function MyTeams() {
+export default function MyTeamsScreen() {
     const router = useRouter();
     const [teams, setTeams] = useState<Team[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const teamsRef = ref(db, '/teams');
-        const unsubscribe = onValue(teamsRef, async (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                // Fetching team data
-                const parsedTeams: Team[] = await Promise.all(
-                    Object.keys(data).map(async (key) => {
-                        const teamCaptainId = data[key].teamCaptain;
-                        const teamCaptainName = await fetchUserName(teamCaptainId); // Fetch the captain's name
+        const userId = auth.currentUser?.uid;
 
-                        return {
-                            id: key,
-                            teamName: data[key].teamName,
-                            teamCaptain: teamCaptainName, // Store the captain's name instead of the ID
-                            teamImage: data[key].teamImage,
-                        };
-                    })
-                );
-                setTeams(parsedTeams);
-            } else {
-                setTeams([]);
-            }
-            setLoading(false);
-        });
+        if (userId) {
+            const userTeamsRef = ref(db, `/users/${userId}/team`);
+            onValue(userTeamsRef, async (snapshot) => {
+                const teamSlots = snapshot.val();
+                if (teamSlots) {
+                    const teamIDs = Object.values(teamSlots).filter(teamID => teamID !== "");
+                    const parsedTeams: Team[] = (await Promise.all(
+                        // @ts-ignore
+                        teamIDs.map(async (teamID: string): Promise<Team | null> => {
+                            const teamRef = ref(db, `/teams/${teamID}`);
+                            const teamSnapshot = await new Promise<any>((resolve) => {
+                                onValue(teamRef, resolve, { onlyOnce: true });
+                            });
 
-        return () => unsubscribe();
+                            const teamData = teamSnapshot.val();
+                            if (teamData) {
+                                const teamCaptainName = await fetchUserName(teamData.teamCaptain);
+                                return {
+                                    id: teamID,
+                                    teamName: teamData.teamName,
+                                    teamCaptain: teamCaptainName,
+                                    teamImage: teamData.teamImage,
+                                };
+                            }
+                            return null;
+                        })
+                    )).filter((team): team is Team => team !== null);
+
+                    setTeams(parsedTeams);
+                } else {
+                    setTeams([]);
+                }
+                setLoading(false);
+            });
+        }
     }, []);
 
     const fetchUserName = async (userId: string): Promise<string> => {
@@ -61,7 +72,6 @@ export default function MyTeams() {
 
     const renderItem = ({ item }: { item: Team | null }) => {
         if (item === null) {
-            // Render the "Create Team" and "Search Team" buttons side by side
             return (
                 <View style={styles.createAndSearchContainer}>
                     <Pressable
@@ -79,7 +89,6 @@ export default function MyTeams() {
                 </View>
             );
         } else {
-            // Render a team item
             return (
                 <Pressable
                     style={styles.teamContainer}
@@ -99,10 +108,8 @@ export default function MyTeams() {
         }
     };
 
-
     return (
         <View style={styles.container}>
-            {/* Top Bar */}
             <TopBarStats />
 
             <View style={Styles.pageContainer}>
@@ -110,7 +117,7 @@ export default function MyTeams() {
                     <Text style={styles.loadingText}>Loading...</Text>
                 ) : (
                     <FlatList
-                        data={[...teams, null]} // Add null as the last item to represent the "Create Team" and "Search Team" buttons
+                        data={[...teams, null]}
                         renderItem={renderItem}
                         keyExtractor={(item, index) =>
                             item ? item.id : `create-team-button-${index}`
@@ -119,11 +126,10 @@ export default function MyTeams() {
                 )}
             </View>
 
-            {/* Barra de Navegação */}
-            <NavigationBar selected="team"/>
+            <NavigationBar selected="team" />
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
