@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Pressable, StyleSheet, Image, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, {useEffect, useState} from 'react';
+import {View, Text, FlatList, Pressable, StyleSheet, Image, ActivityIndicator} from 'react-native';
+import {useRouter} from 'expo-router';
 import NavigationBar from "@/components/NavigationBar";
 import TopBarStats from "@/components/TopBarStats";
-import { db } from '@/firebaseConfig';
-import { ref, onValue } from "firebase/database";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {db} from '@/firebaseConfig';
+import {ref, onValue} from "firebase/database";
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+import {Styles} from "@/constants/Styles";
 
 type Field = {
     id: string;
@@ -44,44 +45,48 @@ export default function FieldsScreen() {
         return () => unsubscribe();
     }, []);
 
-    const renderItem = ({ item }: { item: Field }) => (
+    const renderItem = ({item}: { item: Field }) => (
         <Pressable
             style={styles.fieldContainer}
             onPress={() => router.push(`/FieldDetailsScreen?id=${item.id}`)} // Passando o ID do campo na navegação
         >
-            <Image source={{ uri: item.image }} style={styles.fieldImage} />
+            <Image source={{uri: item.image}} style={styles.fieldImage}/>
             <View style={styles.overlay}>
                 <Text style={styles.fieldName}>{item.name}</Text>
                 <View style={styles.infoContainer}>
                     <Text style={styles.fieldLocation}>{item.location}</Text>
                     <Text style={styles.fieldPrice}>{item.price}</Text>
                 </View>
-                <MaterialCommunityIcons name="heart-outline" size={28} color="#fff" style={styles.favoriteIcon} />
+                <MaterialCommunityIcons name="heart-outline" size={28} color="#fff" style={styles.favoriteIcon}/>
             </View>
         </Pressable>
     );
 
     return (
         <View style={styles.container}>
-            <TopBarStats />
+            <TopBarStats/>
 
-            <View style={styles.contentContainer}>
-                {loading ? (
-                    <View style={styles.loadingContainer}>
-                        <ActivityIndicator size="large" color="#007BFF" />
-                        <Text style={styles.loadingText}>Carregando campos...</Text>
-                    </View>
-                ) : (
-                    <FlatList
-                        data={fields}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
-                        contentContainerStyle={styles.list}
-                    />
-                )}
+            <View style={Styles.pageContainer}>
+
+                <View style={styles.contentContainer}>
+                    {loading ? (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" color="#007BFF"/>
+                            <Text style={styles.loadingText}>Carregando campos...</Text>
+                        </View>
+                    ) : (
+                        <FlatList
+                            data={fields}
+                            renderItem={renderItem}
+                            keyExtractor={(item) => item.id}
+                            contentContainerStyle={styles.list}
+                        />
+                    )}
+                </View>
+
             </View>
 
-            <NavigationBar selected="fields" />
+            <NavigationBar selected="FieldsScreen"/>
         </View>
     );
 }
@@ -93,7 +98,6 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         flex: 1,
-        paddingTop: 60,
         paddingHorizontal: 15,
     },
     list: {
@@ -106,7 +110,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         backgroundColor: '#FFF',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
+        shadowOffset: {width: 0, height: 4},
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 2,

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, FlatList, Image, Pressable, Modal, ActivityIndicator} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Image, Pressable, ActivityIndicator} from 'react-native';
 import {useRouter, useLocalSearchParams} from 'expo-router';
 import {db} from '@/firebaseConfig';
 import {ref, get} from "firebase/database";
@@ -35,8 +35,6 @@ export default function TeamScreen() {
     const router = useRouter();
     const {id} = useLocalSearchParams(); // Capturing the team ID from URL parameters
     const [team, setTeam] = useState<Team | null>(null);
-    const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-    const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -46,22 +44,29 @@ export default function TeamScreen() {
             try {
                 // Reference to team data
                 const teamRef = ref(db, `/teams/${id}`);
-                const teamSnapshot = await get(teamRef); // Use get method
+                const teamSnapshot = await get(teamRef);
                 const teamData = teamSnapshot.val();
 
                 if (teamData) {
-                    // Reference to team stats
-                    const statsRef = ref(db, `/teams/${id}/stats`);
-                    const statsSnapshot = await get(statsRef); // Use get method
-                    const statsData = statsSnapshot.val();
+                    // Fetch player IDs (which are userIds)
+                    const playerIds = teamData.players ? Object.values(teamData.players) : [];
+
+                    // Fetch player details from the `users` node using the playerIds
+                    const playerPromises = playerIds.map(async (userId) => {
+                        const userRef = ref(db, `/users/${userId}/profile`);
+                        const userSnapshot = await get(userRef);
+                        return {id: userId, ...userSnapshot.val()};
+                    });
+
+                    const players = await Promise.all(playerPromises);
 
                     setTeam({
                         id: id as string,
                         name: teamData.teamName,
-                        wins: statsData?.wins || 0,
-                        ties: statsData?.ties || 0,
-                        losses: statsData?.losses || 0,
-                        players: teamData.players || [],
+                        wins: teamData.stats.wins || 0,
+                        ties: teamData.stats.ties || 0,
+                        losses: teamData.stats.losses || 0,
+                        players: players || [],
                         creationDate: teamData.teamCreationDate || 'N/A',
                         description: teamData.teamDescription || 'No description available.',
                         image: teamData.teamImage || '',
@@ -80,21 +85,10 @@ export default function TeamScreen() {
         };
 
         fetchData();
-
-        // Optional: clean up on component unmount
-        return () => {
-            // Add cleanup logic if needed
-        };
     }, [id]);
 
     const handlePlayerPress = (player: Player) => {
-        setSelectedPlayer(player);
-        setModalVisible(true);
-    };
-
-    const handleCloseModal = () => {
-        setModalVisible(false);
-        setSelectedPlayer(null);
+        router.push(`/PlayerProfileScreen?id=${player.id}`);
     };
 
     if (loading) {
@@ -164,49 +158,18 @@ export default function TeamScreen() {
                     data={team.players}
                     keyExtractor={(item) => item.id}
                     renderItem={({item}) => (
-                        <Pressable
-                            style={[
-                                styles.playerContainer,
-                                item.isCaptain && styles.captainContainer,
-                            ]}
-                            onPress={() => handlePlayerPress(item)}
-                        >
+                        <Pressable style={styles.playerContainer} onPress={() => handlePlayerPress(item)}>
                             <Image source={{uri: item.image}} style={styles.playerImage}/>
-                            <View style={styles.playerInfo}>
+                            <View>
                                 <Text style={styles.playerName}>{item.name}</Text>
                                 <Text style={styles.playerPosition}>{item.position}</Text>
                             </View>
                         </Pressable>
                     )}
                 />
-
-                {/* Modal for player details */}
-                {selectedPlayer && (
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={handleCloseModal}
-                    >
-                        <View style={styles.modalContainer}>
-                            <View style={styles.modalContent}>
-                                <Image source={{uri: selectedPlayer.image}} style={styles.modalImage}/>
-                                <Text style={styles.modalName}>{selectedPlayer.name}</Text>
-                                <Text style={styles.modalPosition}>{selectedPlayer.position}</Text>
-                                <Text style={styles.modalDetails}>Idade: {selectedPlayer.age}</Text>
-                                <Text style={styles.modalDetails}>Nacionalidade: {selectedPlayer.nationality}</Text>
-                                <Pressable style={styles.closeButton} onPress={handleCloseModal}>
-                                    <Text style={styles.closeButtonText}>Fechar</Text>
-                                </Pressable>
-                            </View>
-                        </View>
-                    </Modal>
-                )}
-
             </View>
-
             {/* Navigation Bar */}
-            <NavigationBar selected="MyTeamsScreen"/>
+            <NavigationBar selected={'MyTeamsScreen'}/>
         </View>
     );
 }
@@ -260,7 +223,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2a2a2a',
         borderRadius: 8,
         shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.2,
         shadowRadius: 6,
         elevation: 5,
@@ -299,7 +262,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.3,
         shadowRadius: 8,
         elevation: 10,

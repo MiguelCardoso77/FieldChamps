@@ -21,7 +21,7 @@ export default function Layout() {
             {/* App Screens */}
             <Tabs.Screen name="home" options={{ title: 'Home', headerShown: false }} />
             <Tabs.Screen name="MyTeamsScreen" options={{ title: 'My Teams', headerShown: false }} />
-            <Tabs.Screen name="fields" options={{ title: 'Fields', headerShown: false }} />
+            <Tabs.Screen name="FieldsScreen" options={{ title: 'Fields', headerShown: false }} />
             <Tabs.Screen name="upload-game" options={{ title: 'Upload Game', headerShown: false }} />
             <Tabs.Screen name="ProfileScreen" options={{ title: 'Profile', headerShown: false }} />
 
@@ -34,6 +34,7 @@ export default function Layout() {
             <Tabs.Screen name="preferences" options={{ title: 'Preferences', headerShown: false }} />
             <Tabs.Screen name="calendar" options={{ title: 'Calendar', headerShown: false }} />
             <Tabs.Screen name="FieldDetailsScreen" options={{ title: 'Field', headerShown: false }} />
+            <Tabs.Screen name="PlayerProfileScreen" options={{ title: 'Player Profile', headerShown: false }} />
 
             {/* Game Screens */}
             <Tabs.Screen name="search-games" options={{ title: 'Search Games', headerShown: false }} />

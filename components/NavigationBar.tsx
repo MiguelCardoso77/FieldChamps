@@ -53,7 +53,7 @@ export default function NavigationBar({ selected }: NavigationBarProps) {
             {/* Fields Button */}
             <Pressable
                 style={styles.menuButton}
-                onPress={() => router.push('/fields')}
+                onPress={() => router.push('/FieldsScreen')}
             >
                 <MaterialCommunityIcons
                     name={selected === 'fields' ? 'soccer-field' : 'soccer-field'}
