@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Pressable, ImageBackground, FlatList } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Pressable, ImageBackground, FlatList} from 'react-native';
+import {useRouter} from 'expo-router';
 import NavigationBar from "@/components/NavigationBar";
-import { Styles } from "@/constants/Styles";
-import { onValue, ref, get } from "firebase/database";
-import { db } from "@/firebaseConfig";
+import {Styles} from "@/constants/Styles";
+import {onValue, ref, get} from "firebase/database";
+import {db} from "@/firebaseConfig";
 import TopBarReturn from "@/components/TopBarReturn";
 
 type Game = {
@@ -19,7 +19,9 @@ type Game = {
     team2: string | null;
     team2Level: number | null;
     team2Image: string | null;
-    gameLocation: string;
+    gameLocation: number;
+    gameLocationCoords: string | null;
+    fieldName: string | null;
     duration: number;
 };
 
@@ -32,16 +34,29 @@ export default function SearchGamesScreen() {
         const gamesRef = ref(db, '/games');
 
         const fetchTeamData = async (teamID: any) => {
-            if (!teamID) return { teamLevel: null, teamImage: null };
+            if (!teamID) return {teamLevel: null, teamImage: null};
             const teamRef = ref(db, `/teams/${teamID}`);
             const snapshot = await get(teamRef);
 
-            if (!snapshot.exists()) return { teamLevel: null, teamImage: null };
+            if (!snapshot.exists()) return {teamLevel: null, teamImage: null};
 
             const teamData = snapshot.val();
             return {
-                teamLevel: teamData.stats?.teamLevel ?? null,  // Optional chaining for safety
+                teamLevel: teamData.stats?.teamLevel ?? null,
                 teamImage: teamData.teamImage ?? null,
+            };
+        };
+
+        const fetchFieldData = async (fieldID: number) => {
+            const fieldRef = ref(db, `/fields/${fieldID}`);
+            const snapshot = await get(fieldRef);
+
+            if (!snapshot.exists()) return { coordinates: null, name: null };
+
+            const fieldData = snapshot.val();
+            return {
+                coordinates: fieldData.coordinates ?? null,
+                name: fieldData.name ?? null
             };
         };
 
@@ -51,7 +66,11 @@ export default function SearchGamesScreen() {
                 const fetchedGames: Game[] = await Promise.all(
                     Object.keys(data).map(async (key) => {
                         const team1Data = await fetchTeamData(data[key].team1);
-                        const team2Data = data[key].team2 ? await fetchTeamData(data[key].team2) : { teamLevel: null, teamImage: null };
+                        const team2Data = data[key].team2 ? await fetchTeamData(data[key].team2) : {
+                            teamLevel: null,
+                            teamImage: null
+                        };
+                        const { coordinates, name: fieldName } = await fetchFieldData(data[key].gameLocation);
 
                         return {
                             id: key,
@@ -66,6 +85,8 @@ export default function SearchGamesScreen() {
                             team2Level: team2Data.teamLevel,
                             team2Image: team2Data.teamImage,
                             gameLocation: data[key].gameLocation,
+                            gameLocationCoords: coordinates,
+                            fieldName: fieldName,
                             duration: data[key].duration,
                         };
                     })
@@ -83,7 +104,7 @@ export default function SearchGamesScreen() {
     }, []);
 
     const handlePress = (gameId: string) => {
-        router.push(`/GameDetailsScreen`);
+        router.push(`/GameDetailsScreen?id=${gameId}`);
     };
 
     const renderItem = ({ item }: { item: Game }) => (
@@ -101,24 +122,26 @@ export default function SearchGamesScreen() {
                         source={{ uri: item.team1Image || 'default_image_url' }}
                         style={styles.playerImage}
                     >
-                        <Text style={styles.playerName}>{item.team1}</Text>
                     </ImageBackground>
-                    <Text style={styles.playerScore}>{item.team1Level?.toFixed(2) ?? 'N/A'}</Text>  {/* Show 'N/A' if teamLevel is null */}
+                    <Text style={styles.playerScore}>{item.team1Level?.toFixed(2) ?? 'N/A'}</Text>
                 </View>
+
+                <Text style={styles.vsText}>VS</Text>
+
                 <View style={styles.team}>
                     <ImageBackground
-                        source={{ uri: item.team2Image || 'default_image_url' }}
+                        source={{ uri: item.team2Image || 'https://img.icons8.com/ios7/200/228BE6/plus.png' }}
                         style={styles.playerImage}
                     >
                         <Text style={styles.playerName}>{item.team2}</Text>
                     </ImageBackground>
-                    <Text style={styles.playerScore}>{item.team2Level?.toFixed(2) ?? 'N/A'}</Text>  {/* Show 'N/A' if teamLevel is null */}
+                    <Text style={styles.playerScore}>{item.team2Level?.toFixed(2) ?? 'Livre'}</Text>
                 </View>
             </View>
             <View style={styles.gameInfo}>
-                <Text style={styles.locationText}>{item.gameLocation}</Text>
-                <Text style={styles.distanceText}>{item.gameLocation}km · {item.gameLocation}</Text>
-                <Text style={styles.durationText}>{item.duration}min</Text>
+                <Text style={styles.locationText}>{item.fieldName || 'Unknown Field'}</Text>
+                <Text style={styles.distanceText}>{'Unknown Distance'}</Text>
+                <Text style={styles.durationText}>{item.gameDuration} min</Text>
             </View>
         </Pressable>
     );
@@ -126,7 +149,7 @@ export default function SearchGamesScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBarReturn selected={'upload-game'} title={'Procurar Jogo'}/>
+            <TopBarReturn selected={'upload-game'} title={'Procurar Jogo'} />
 
             <View style={Styles.pageContainer}>
                 {loading ? (
@@ -144,7 +167,8 @@ export default function SearchGamesScreen() {
             <NavigationBar selected="search-games" />
         </View>
     );
-};
+}
+;
 
 const styles = StyleSheet.create({
     container: {
@@ -163,7 +187,7 @@ const styles = StyleSheet.create({
         padding: 15,
         marginBottom: 20,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 2,
@@ -180,12 +204,14 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     gameType: {
-        fontSize: 14,
-        color: '#888',
+        fontSize: 16, // Matching the gameTime font size
+        fontWeight: 'bold', // Matching the bold weight
+        color: '#333', // Matching the color
     },
     teamsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
+        alignItems: 'center', // Ensure vertical alignment
         marginTop: 10,
     },
     team: {
@@ -212,6 +238,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffecb3',
         paddingHorizontal: 5,
         borderRadius: 4,
+    },
+    vsText: {
+        fontSize: 20,
+        color: '#000',
+        fontWeight: 'bold',
+        marginHorizontal: 20, // To add some spacing between teams and VS
+        alignSelf: 'center', // Centered within the parent flex container
     },
     gameInfo: {
         marginTop: 10,

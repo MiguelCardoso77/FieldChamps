@@ -51,7 +51,7 @@ export default function SearchTeamsScreen() {
     );
 
     const handlePress = (teamId: string) => {
-        router.push(`/team`);
+        router.push(`/TeamDetailsScreen`);
     };
 
     const renderItem = ({ item }: { item: Team }) => (

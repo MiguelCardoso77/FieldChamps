@@ -4,19 +4,22 @@ import { useRouter } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import NavigationBar from "@/components/NavigationBar";
-import TopBarStats from "@/components/TopBarStats";
 import { push, ref, set } from "firebase/database";
 import { db } from "@/firebaseConfig";
 import { Styles } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
+import TopBarReturn from "@/components/TopBarReturn";
 
 export default function CreateGameScreen() {
     const router = useRouter();
-    const [gameLocation, setGameLocation] = useState('');
+    const [gameDate, setGameDate] = useState(new Date());
     const [gameStartTime, setGameStartTime] = useState(new Date());
+    const [team1, setTeam1] = useState('5LQ00U');
+    const [gameLocation, setGameLocation] = useState('');
     const [gameDuration, setGameDuration] = useState('');
-    const [gameType, setGameType] = useState('Amigável');
+    const [gameType, setGameType] = useState('5v5');
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
 
     const handleSubmit = async () => {
         if (!gameLocation || !gameStartTime || !gameDuration || !gameType) {
@@ -28,32 +31,33 @@ export default function CreateGameScreen() {
 
         await set(newGameRef, {
             gameLocation,
-            gameStartTime: gameStartTime.toISOString(),
+            gameDate: gameDate.toLocaleDateString('pt-BR'), // Store the formatted date
+            gameStartTime: gameStartTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }), // Store the formatted time
             gameDuration: parseInt(gameDuration),
             gameType,
             team1: '5LQ00U',
-            team1Level: null,
-            team1Image: null,
-            team2: null,
-            team2Level: null,
-            team2Image: null,
-            available: 0,
         });
 
         Alert.alert('Sucesso', 'Jogo criado com sucesso!');
         router.push('/upload-game');
     };
 
-    const onChangeDate = (event, selectedDate) => {
-        const currentDate = selectedDate || gameStartTime;
+    const onChangeDate = (event: any, selectedDate: Date) => {
+        const currentDate = selectedDate || gameDate;
         setShowDatePicker(false);
-        setGameStartTime(currentDate);
+        setGameDate(currentDate);
+    };
+
+    const onChangeTime = (event: any, selectedTime: Date) => {
+        const currentTime = selectedTime || gameStartTime;
+        setShowTimePicker(false);
+        setGameStartTime(currentTime);
     };
 
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBarStats/>
+            <TopBarReturn selected={'upload-game'} title={'Criar Jogo'}/>
 
             <View style={Styles.pageContainer}>
                 <View style={styles.formContainer}>
@@ -70,23 +74,41 @@ export default function CreateGameScreen() {
                         style={styles.input}
                         onValueChange={(itemValue) => setGameType(itemValue)}
                     >
-                        <Picker.Item label="Amigável" value="Amigável" />
-                        <Picker.Item label="Treino" value="Treino" />
-                        <Picker.Item label="Oficial" value="Oficial" />
+                        <Picker.Item label="3v3" value="3v3" />
+                        <Picker.Item label="5v5" value="5v5" />
+                        <Picker.Item label="7v7" value="7v7" />
+                        <Picker.Item label="9v9" value="9v9" />
+                        <Picker.Item label="11v11" value="11v11" />
                     </Picker>
 
-                    <Text style={styles.label}>Data e Hora de Início:</Text>
-                    <Button onPress={() => setShowDatePicker(true)} title="Escolher Data e Hora" />
+                    <Text style={styles.label}>Data do Jogo:</Text>
+                    <Button onPress={() => setShowDatePicker(true)} title="Escolher Data" />
                     {showDatePicker && (
                         <DateTimePicker
-                            value={gameStartTime}
-                            mode="datetime"
+                            value={gameDate}
+                            mode="date"
                             display="default"
+                            // @ts-ignore
                             onChange={onChangeDate}
                         />
                     )}
                     <Text style={styles.selectedDateText}>
-                        {gameStartTime.toLocaleDateString()} {gameStartTime.toLocaleTimeString()}
+                        {gameDate.toLocaleDateString('pt-BR')}
+                    </Text>
+
+                    <Text style={styles.label}>Hora de Início:</Text>
+                    <Button onPress={() => setShowTimePicker(true)} title="Escolher Hora" />
+                    {showTimePicker && (
+                        <DateTimePicker
+                            value={gameStartTime}
+                            mode="time"
+                            display="default"
+                            // @ts-ignore
+                            onChange={onChangeTime}
+                        />
+                    )}
+                    <Text style={styles.selectedDateText}>
+                        {gameStartTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                     </Text>
 
                     <Text style={styles.label}>Duração (minutos):</Text>

@@ -9,14 +9,20 @@ import { Styles } from '@/constants/Styles';
 
 type Game = {
     id: string;
-    name: string;
-    location: string;
-    date: string;
-    time: string;
-    image: any;
-    description: string;
-    price: string;
-    registeredTeams: { [teamId: string]: boolean }; // Track registered teams
+    gameDate: string;
+    gameStartTime: string;
+    gameDuration: number;
+    gameType: string;
+    team1: string;
+    team1Level: number | null;
+    team1Image: string | null;
+    team2: string | null;
+    team2Level: number | null;
+    team2Image: string | null;
+    gameLocation: number;
+    gameLocationCoords: string | null;
+    fieldName: string | null;
+    duration: number;
 };
 
 export default function GameDetailScreen() {
@@ -29,21 +35,26 @@ export default function GameDetailScreen() {
     const userId = auth.currentUser?.uid;
 
     useEffect(() => {
-        // Load game details
         const gameRef = ref(db, `/games/${id}`);
         const unsubscribe = onValue(gameRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
                 setGame({
                     id: id as string,
-                    name: data.name,
-                    location: data.location,
-                    date: data.date,
-                    time: data.time,
-                    image: data.image,
-                    description: data.description || 'No description available.',
-                    price: data.price || 'Free',
-                    registeredTeams: data.registeredTeams || {},
+                    gameDate: data.gameDate,
+                    gameStartTime: data.gameStartTime,
+                    gameDuration: data.gameDuration,
+                    gameType: data.gameType,
+                    team1: data.team1,
+                    team1Level: data.team1Level,
+                    team1Image: data.team1Image,
+                    team2: data.team2,
+                    team2Level: data.team2Level,
+                    team2Image: data.team2Image,
+                    gameLocation: data.gameLocation,
+                    gameLocationCoords: data.gameLocationCoords,
+                    fieldName: data.fieldName,
+                    duration: data.duration,
                 });
             }
             setLoading(false);
@@ -70,17 +81,23 @@ export default function GameDetailScreen() {
 
         if (userTeamId && game) {
             const gameRef = ref(db, `/games/${game.id}`);
-            const newRegisteredTeams = { ...game.registeredTeams, [userTeamId]: true };
+
+            // Check if team2 is already assigned
+            if (game.team2) {
+                Alert.alert('Erro', 'Um time já está registrado para este jogo.');
+                return;
+            }
 
             try {
-                await update(gameRef, { registeredTeams: newRegisteredTeams });
+                // Update team2 to the new team ID
+                await update(gameRef, { team2: userTeamId });
                 router.push('/home');
-                Alert.alert('Success', 'Your team has been successfully registered for the game.');
+                Alert.alert('Sucesso', 'Seu time foi registrado com sucesso para o jogo.');
             } catch (error) {
-                Alert.alert('Error', 'Failed to register your team. Please try again later.');
+                Alert.alert('Erro', 'Falha ao registrar seu time. Por favor, tente novamente mais tarde.');
             }
         } else {
-            Alert.alert('Error', 'You are not authorized to register a team.');
+            Alert.alert('Erro', 'Você não está autorizado a registrar um time.');
         }
     };
 
@@ -88,7 +105,7 @@ export default function GameDetailScreen() {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#007BFF" />
-                <Text style={styles.loadingText}>Loading details...</Text>
+                <Text style={styles.loadingText}>Carregando detalhes...</Text>
             </View>
         );
     }
@@ -96,7 +113,7 @@ export default function GameDetailScreen() {
     if (!game) {
         return (
             <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>Game not found.</Text>
+                <Text style={styles.errorText}>Jogo não encontrado.</Text>
             </View>
         );
     }
@@ -104,22 +121,35 @@ export default function GameDetailScreen() {
     return (
         <View style={styles.container}>
             {/* Top Bar */}
-            <TopBarReturn selected={'upload-game'} title={'Detalhes do Jogo'} />
+            <TopBarReturn selected={'SearchGamesScreen'} title={'Detalhes do Jogo'} />
 
             <View style={Styles.pageContainer}>
-                <Image source={{ uri: game.image }} style={styles.gameImage} />
+                {/* Conditionally render the image or a placeholder if the image is null */}
+                {game.team1Image ? (
+                    <Image source={{ uri: game.team1Image }} style={styles.gameImage} />
+                ) : (
+                    <View style={styles.imagePlaceholder}>
+                        <Text style={styles.imagePlaceholderText}>Nenhuma Imagem Disponível</Text>
+                    </View>
+                )}
+
                 <View style={styles.infoContainer}>
-                    <Text style={styles.gameName}>{game.name}</Text>
-                    <Text style={styles.gameLocation}>{game.location}</Text>
-                    <Text style={styles.gameDate}>Date: {game.date}</Text>
-                    <Text style={styles.gameTime}>Time: {game.time}</Text>
-                    <Text style={styles.gamePrice}>Price: {game.price}</Text>
-                    <Text style={styles.gameDescription}>{game.description}</Text>
-                    {isCaptain && (
+                    <Text style={styles.gameName}>{game.gameType}</Text>
+                    <Text style={styles.gameLocation}>{game.fieldName || 'Campo Desconhecido'}</Text>
+                    <Text style={styles.gameDate}>Data: {game.gameDate}</Text>
+                    <Text style={styles.gameTime}>Hora: {game.gameStartTime}</Text>
+                    <Text style={styles.gameDuration}>Duração: {game.gameDuration} min</Text>
+                    <Text style={styles.gamePrice}>Preço: Gratuito</Text>
+                    <Text style={styles.gameDescription}>{game.team2 ? 'Times estão registrados.' : 'Nenhuma descrição disponível.'}</Text>
+
+                    {isCaptain ? (
                         <Pressable style={styles.signUpButton} onPress={handleSignUp}>
-                            <Text style={styles.signUpButtonText}>Sign Up My Team</Text>
+                            <Text style={styles.signUpButtonText}>Inscrever Meu Time</Text>
                         </Pressable>
+                    ) : (
+                        <Text style={styles.signUpButtonText}>Não é Capitão</Text>
                     )}
+
                 </View>
             </View>
 
@@ -139,6 +169,19 @@ const styles = StyleSheet.create({
         height: 300,
         borderBottomLeftRadius: 12,
         borderBottomRightRadius: 12,
+    },
+    imagePlaceholder: {
+        width: '100%',
+        height: 300,
+        backgroundColor: '#333',
+        borderBottomLeftRadius: 12,
+        borderBottomRightRadius: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    imagePlaceholderText: {
+        color: '#fff',
+        fontSize: 18,
     },
     infoContainer: {
         padding: 20,
@@ -167,6 +210,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#cccccc',
         marginBottom: 10,
+    },
+    gameDuration: {
+        fontSize: 16,
+        color: '#cccccc',
+        marginBottom: 20,
     },
     gamePrice: {
         fontSize: 16,
