@@ -37,8 +37,8 @@ export default function Layout() {
             <Tabs.Screen name="PlayerProfileScreen" options={{ title: 'Player Profile', headerShown: false }} />
 
             {/* Game Screens */}
-            <Tabs.Screen name="search-games" options={{ title: 'Search Games', headerShown: false }} />
-            <Tabs.Screen name="create-game" options={{ title: 'Create Game', headerShown: false }} />
+            <Tabs.Screen name="CreateGameScreen" options={{ title: 'Create Game', headerShown: false }} />
+            <Tabs.Screen name="SearchGamesScreen" options={{ title: 'Search Games', headerShown: false }} />
             <Tabs.Screen name="GameDetailsScreen" options={{ title: 'Game Details', headerShown: false }} />
 
             {/* Team Screens */}

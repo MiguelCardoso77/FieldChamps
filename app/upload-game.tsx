@@ -13,16 +13,10 @@ export default function UploadGameScreen() {
     const handlePress = (action: string) => {
         switch (action) {
             case 'search':
-                router.push('/search-games');
+                router.push('/SearchGamesScreen');
                 break;
             case 'create':
-                router.push('/create-game');
-                break;
-            case 'register':
-                router.push('/register-game');
-                break;
-            case 'performance':
-                router.push('/register-performance');
+                router.push('/CreateGameScreen');
                 break;
             default:
                 Alert.alert('Erro', 'Ação não reconhecida.');
@@ -56,26 +50,6 @@ export default function UploadGameScreen() {
                             imageStyle={styles.buttonImage}
                         >
                             <Text style={styles.buttonText}>Criar Jogo</Text>
-                        </ImageBackground>
-                    </Pressable>
-
-                    <Pressable style={styles.button} onPress={() => handlePress('register')}>
-                        <ImageBackground
-                            source={require('../assets/images/wallpaper5.jpg')}
-                            style={styles.buttonBackground}
-                            imageStyle={styles.buttonImage}
-                        >
-                            <Text style={styles.buttonText}>Registar Jogo</Text>
-                        </ImageBackground>
-                    </Pressable>
-
-                    <Pressable style={styles.button} onPress={() => handlePress('performance')}>
-                        <ImageBackground
-                            source={require('../assets/images/wallpaper5.jpg')}
-                            style={styles.buttonBackground}
-                            imageStyle={styles.buttonImage}
-                        >
-                            <Text style={styles.buttonText}>Registar Performance</Text>
                         </ImageBackground>
                     </Pressable>
                 </View>

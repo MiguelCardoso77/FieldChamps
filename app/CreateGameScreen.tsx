@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Button, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
 import NavigationBar from "@/components/NavigationBar";
 import TopBarStats from "@/components/TopBarStats";
 import { push, ref, set } from "firebase/database";
@@ -11,31 +13,41 @@ import { Colors } from "@/constants/Colors";
 export default function CreateGameScreen() {
     const router = useRouter();
     const [gameLocation, setGameLocation] = useState('');
-    const [gameStartTime, setGameStartTime] = useState('');
+    const [gameStartTime, setGameStartTime] = useState(new Date());
     const [gameDuration, setGameDuration] = useState('');
+    const [gameType, setGameType] = useState('Amigável');
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
     const handleSubmit = async () => {
-        if (!gameLocation || !gameStartTime || !gameDuration) {
+        if (!gameLocation || !gameStartTime || !gameDuration || !gameType) {
             Alert.alert('Erro', 'Por favor, preencha todos os campos.');
             return;
         }
 
         const newGameRef = push(ref(db, `/games/`));
 
-        //TODO: Associar equipa do capitão ao jogo
-        //TODO: Escolher a localização do jogo a partir da lista de campos disponíveis
-        //TODO: Escolher data e hora a partir do calendário
-        //TODO: Definir tipo de jogo (amigável, treino, oficial) (5x5, 7x7, 11x11)
-
         await set(newGameRef, {
             gameLocation,
-            gameStartTime,
+            gameStartTime: gameStartTime.toISOString(),
             gameDuration: parseInt(gameDuration),
+            gameType,
+            team1: '5LQ00U',
+            team1Level: null,
+            team1Image: null,
+            team2: null,
+            team2Level: null,
+            team2Image: null,
             available: 0,
         });
 
         Alert.alert('Sucesso', 'Jogo criado com sucesso!');
-        router.push('/myteams');
+        router.push('/upload-game');
+    };
+
+    const onChangeDate = (event, selectedDate) => {
+        const currentDate = selectedDate || gameStartTime;
+        setShowDatePicker(false);
+        setGameStartTime(currentDate);
     };
 
     return (
@@ -44,7 +56,6 @@ export default function CreateGameScreen() {
             <TopBarStats/>
 
             <View style={Styles.pageContainer}>
-
                 <View style={styles.formContainer}>
                     <Text style={styles.label}>Localização do Jogo:</Text>
                     <TextInput
@@ -53,12 +64,30 @@ export default function CreateGameScreen() {
                         onChangeText={setGameLocation}
                     />
 
-                    <Text style={styles.label}>Data e Hora de Início:</Text>
-                    <TextInput
+                    <Text style={styles.label}>Tipo de Jogo:</Text>
+                    <Picker
+                        selectedValue={gameType}
                         style={styles.input}
-                        value={gameStartTime}
-                        onChangeText={setGameStartTime}
-                    />
+                        onValueChange={(itemValue) => setGameType(itemValue)}
+                    >
+                        <Picker.Item label="Amigável" value="Amigável" />
+                        <Picker.Item label="Treino" value="Treino" />
+                        <Picker.Item label="Oficial" value="Oficial" />
+                    </Picker>
+
+                    <Text style={styles.label}>Data e Hora de Início:</Text>
+                    <Button onPress={() => setShowDatePicker(true)} title="Escolher Data e Hora" />
+                    {showDatePicker && (
+                        <DateTimePicker
+                            value={gameStartTime}
+                            mode="datetime"
+                            display="default"
+                            onChange={onChangeDate}
+                        />
+                    )}
+                    <Text style={styles.selectedDateText}>
+                        {gameStartTime.toLocaleDateString()} {gameStartTime.toLocaleTimeString()}
+                    </Text>
 
                     <Text style={styles.label}>Duração (minutos):</Text>
                     <TextInput
@@ -68,16 +97,15 @@ export default function CreateGameScreen() {
                         keyboardType='numeric'
                     />
 
-                    <Button title="Criar Jogo" onPress={handleSubmit}/>
+                    <Button title="Criar Jogo" onPress={handleSubmit} />
                 </View>
-
             </View>
 
             {/* Barra de Navegação */}
-            <NavigationBar selected="create-game"/>
+            <NavigationBar selected="create-game" />
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -104,5 +132,9 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         color: '#FFFFFF',
         backgroundColor: '#333333',
+    },
+    selectedDateText: {
+        color: '#FFFFFF',
+        marginBottom: 20,
     },
 });
