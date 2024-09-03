@@ -59,6 +59,8 @@ export default function RegisterScreen() {
         });
     }
 
+    // TODO: Trust Factor not working
+
     const handleRegister = async () => {
         if (!acceptTermsConditions) {
             Alert.alert("Erro", "Você deve aceitar os Termos e Condições para se registrar.");

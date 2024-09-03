@@ -126,7 +126,7 @@ export default function MyTeamsScreen() {
                 )}
             </View>
 
-            <NavigationBar selected="team" />
+            <NavigationBar selected="MyTeamsScreen" />
         </View>
     );
 }

@@ -32,9 +32,9 @@ export default function NavigationBar({ selected }: NavigationBarProps) {
                 onPress={() => router.push('/MyTeamsScreen')}
             >
                 <MaterialCommunityIcons
-                    name={selected === 'team' ? 'account-group' : 'account-group-outline'}
+                    name={selected === 'MyTeamsScreen' ? 'account-group' : 'account-group-outline'}
                     size={32}
-                    color={selected === 'team' ? Colors.darkBlue.buttons : '#ffffff'}
+                    color={selected === 'MyTeamsScreen' ? Colors.darkBlue.buttons : '#ffffff'}
                 />
             </Pressable>
 
@@ -44,9 +44,9 @@ export default function NavigationBar({ selected }: NavigationBarProps) {
                 onPress={() => router.push('/upload-game')}
             >
                 <MaterialCommunityIcons
-                    name={selected === 'game' ? 'soccer' : 'soccer'}
+                    name={selected === 'upload-game' ? 'soccer' : 'soccer'}
                     size={32}
-                    color={selected === 'game' ? Colors.darkBlue.buttons : '#ffffff'}
+                    color={selected === 'upload-game' ? Colors.darkBlue.buttons : '#ffffff'}
                 />
             </Pressable>
 
@@ -56,9 +56,9 @@ export default function NavigationBar({ selected }: NavigationBarProps) {
                 onPress={() => router.push('/FieldsScreen')}
             >
                 <MaterialCommunityIcons
-                    name={selected === 'fields' ? 'soccer-field' : 'soccer-field'}
+                    name={selected === 'FieldsScreen' ? 'soccer-field' : 'soccer-field'}
                     size={32}
-                    color={selected === 'fields' ? Colors.darkBlue.buttons : '#ffffff'}
+                    color={selected === 'FieldsScreen' ? Colors.darkBlue.buttons : '#ffffff'}
                 />
             </Pressable>
 
@@ -68,9 +68,9 @@ export default function NavigationBar({ selected }: NavigationBarProps) {
                 onPress={() => router.push('/ProfileScreen')}
             >
                 <MaterialCommunityIcons
-                    name={selected === 'profile' ? 'account' : 'account-outline'}
+                    name={selected === 'ProfileScreen' ? 'account' : 'account-outline'}
                     size={32}
-                    color={selected === 'profile' ? Colors.darkBlue.buttons : '#ffffff'}
+                    color={selected === 'ProfileScreen' ? Colors.darkBlue.buttons : '#ffffff'}
                 />
             </Pressable>
 

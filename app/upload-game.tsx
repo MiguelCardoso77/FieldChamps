@@ -57,7 +57,7 @@ export default function UploadGameScreen() {
             </View>
 
             {/* Barra de Navegação */}
-            <NavigationBar selected="create-game" />
+            <NavigationBar selected="upload-game" />
         </View>
     );
 };
