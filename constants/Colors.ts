@@ -1,27 +1,11 @@
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
-
+// Color constants for the app
 export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+  lightBlue: {
+    background: '#f6f6f6',
+    bars: '#f6f6f6',
+    buttons: '#6cbcf1',
+    text: '#191524',
   },
-  dark: {
-    bars: '#0e0a18',
-    text: '#FFFFFF',
-
-    background: '#0e0a18',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
-  },
-
-
   darkBlue: {
     background: '#191524',
     bars: '#0e0a18',

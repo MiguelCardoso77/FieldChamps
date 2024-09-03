@@ -85,13 +85,11 @@ export default function HomeScreen() {
                 {/* Recent Matches Section */}
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Recent Matches</Text>
-                    //TODO: Recent Matches List
                 </View>
 
                 {/* Upcoming Matches Section */}
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Upcoming Matches</Text>
-                    //TODO: Upcoming Matches List
                 </View>
 
             </View>
@@ -101,6 +99,9 @@ export default function HomeScreen() {
         </View>
     );
 }
+
+//TODO: Recent Matches List
+//TODO: Upcoming Matches List
 
 const styles = StyleSheet.create({
     container: {

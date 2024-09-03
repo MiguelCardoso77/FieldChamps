@@ -27,7 +27,7 @@ export default function Layout() {
 
             {/* Settings Screens */}
             <Tabs.Screen name="notifications" options={{ title: 'Notifications', headerShown: false }} />
-            <Tabs.Screen name="settings" options={{ title: 'Settings', headerShown: false }} />
+            <Tabs.Screen name="SettingsScreen" options={{ title: 'Settings', headerShown: false }} />
 
             {/* Other Screens */}
             <Tabs.Screen name="edit" options={{ title: 'Edit', headerShown: false }} />

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Pressable, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import {Styles} from "@/constants/Styles";
+import { Styles } from "@/constants/Styles";
 
 interface TopBarReturnProps {
     selected: string;
@@ -38,7 +38,7 @@ export default function TopBarReturn({ selected, title }: TopBarReturnProps) {
 
                     <Pressable
                         style={styles.settingsButton}
-                        onPress={() => router.push('/settings')}
+                        onPress={() => router.push('/SettingsScreen')}
                     >
                         <MaterialCommunityIcons name="cog-outline" size={28} color="#ffffff" />
                     </Pressable>

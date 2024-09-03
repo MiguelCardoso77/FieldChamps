@@ -1,18 +1,20 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 
+const currentTheme = 'darkBlue';
+
 export const Styles = StyleSheet.create({
     buttonContainer: {
         position: 'relative',
         marginBottom: 20,
     },
     buttonBackground: {
-        backgroundColor: Colors.darkBlue.buttons,
+        backgroundColor: Colors[currentTheme].buttons,
     },
     buttonText: {
         fontSize: 28,
         fontWeight: 'bold',
-        color: Colors.darkBlue.text,
+        color: Colors[currentTheme].buttons,
         textAlign: 'center',
         justifyContent: 'center',
     },
@@ -22,12 +24,12 @@ export const Styles = StyleSheet.create({
         fontSize: 22,
         textAlign: 'center',
         flex: 1,
-        fontFamily: 'ahronbd',
+        fontFamily: 'Ahronbd',
     },
 
     pageContainer: {
         flex: 1,
-        backgroundColor: Colors.darkBlue.background,
+        backgroundColor: Colors[currentTheme].background,
         marginTop: 0,
         marginBottom: 80,
         padding: 20,
