@@ -98,11 +98,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     header: {
-        fontSize: 32,
+        fontFamily: 'Ahronbd',
+        fontSize: 40,
         color: '#ffffff',
         marginBottom: 24,
         textAlign: 'center',
-        fontWeight: 'bold',
     },
 
     // Estilos para o campo de email
