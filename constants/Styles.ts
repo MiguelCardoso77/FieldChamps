@@ -29,6 +29,7 @@ export const Styles = StyleSheet.create({
 
     pageContainer: {
         flex: 1,
+        justifyContent: 'center',
         backgroundColor: Colors[currentTheme].background,
         marginTop: 0,
         marginBottom: 80,

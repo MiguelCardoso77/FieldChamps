@@ -40,7 +40,7 @@ export default function HomeScreen() {
             style={styles.background}
         >
             <View style={styles.overlay}>
-                <Text style={styles.title}>Bem-vindo ao GameOn!</Text>
+                <Text style={styles.title}>Bem-vindo ao GameOn</Text>
                 <Text style={styles.subtitle}>Aqui o teu futebol nunca mais será o mesmo.</Text>
 
                 <Pressable
@@ -51,7 +51,7 @@ export default function HomeScreen() {
                 </Pressable>
                 <Pressable
                     style={styles.buttonSecondary}
-                    onPress={() => router.push(`/login`) }
+                    onPress={() => router.push(`/LoginScreen`) }
                 >
                     <Text style={styles.buttonText}>Já sou membro</Text>
                 </Pressable>

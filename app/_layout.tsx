@@ -15,7 +15,7 @@ export default function Layout() {
             <Tabs.Screen name="index" options={{ title: 'FieldChamps', headerShown: false }} />
 
             {/* Auth Screens */}
-            <Tabs.Screen name="login" options={{ title: 'Login', headerShown: false }} />
+            <Tabs.Screen name="LoginScreen" options={{ title: 'Login', headerShown: false }} />
             <Tabs.Screen name="register" options={{ title: 'Register', headerShown: false }} />
 
             {/* App Screens */}
