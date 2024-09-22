@@ -19,7 +19,7 @@ export default function SettingsScreen() {
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            router.push('/login');
+            router.push('/LoginScreen');
         } catch (error) {
             Alert.alert('Erro ao Sair', 'Houve um erro ao tentar sair. Por favor, tente novamente.');
         }

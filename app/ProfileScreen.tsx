@@ -6,11 +6,13 @@ import { useRouter } from "expo-router";
 import { auth, db } from '@/firebaseConfig';
 import { ref, get } from 'firebase/database';
 import { Styles } from "@/constants/Styles";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function ProfileScreen() {
     const router = useRouter();
     const [userProfile, setUserProfile] = useState<any>(null);
     const [profileImageUri, setProfileImageUri] = useState<string | null>(null);
+    const [activeSection, setActiveSection] = useState<string>('stats');
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -65,7 +67,112 @@ export default function ProfileScreen() {
         } else if (trustFactor >= 2.0 && trustFactor < 4.5) {
             return '#00FF00'; // Green
         } else {
-            return '#0000FF'; // Blue
+            return '#007BFF'; // Blue
+        }
+    };
+
+    const renderTrophies = (trophies: any[]) => {
+        if (!trophies || trophies.length === 0) {
+            return <Text style={styles.noTrophiesText}>No trophies to display</Text>;
+        }
+
+        return (
+            <View style={styles.trophyContainer}>
+                {trophies.slice(0, 3).map((trophy, index) => (
+                    <View key={index} style={styles.trophyBox}>
+                        <Image source={{ uri: trophy.image }} style={styles.trophyImage} />
+                        <Text style={styles.trophyName}>{trophy.name}</Text>
+                    </View>
+                ))}
+            </View>
+        );
+    };
+
+    // Menu options to switch sections
+    const renderMenuOptions = () => (
+        <View style={styles.menuContainer}>
+            <Pressable
+                style={[styles.menuOption, activeSection === 'trophies' && styles.menuOptionSelected]}
+                onPress={() => setActiveSection('trophies')}>
+                <MaterialCommunityIcons name="trophy" size={24} color={activeSection === 'trophies' ? "#FFFFFF" : "#cccccc"} />
+                <Text style={styles.menuText}>Trophies</Text>
+            </Pressable>
+
+            <Pressable
+                style={[styles.menuOption, activeSection === 'stats' && styles.menuOptionSelected]}
+                onPress={() => setActiveSection('stats')}>
+                <MaterialCommunityIcons name="progress-star" size={24} color={activeSection === 'stats' ? "#FFFFFF" : "#cccccc"} />
+                <Text style={styles.menuText}>Stats</Text>
+            </Pressable>
+
+            <Pressable
+                style={[styles.menuOption, activeSection === 'preferences' && styles.menuOptionSelected]}
+                onPress={() => setActiveSection('preferences')}>
+                <MaterialCommunityIcons name="cog" size={24} color={activeSection === 'preferences' ? "#FFFFFF" : "#cccccc"} />
+                <Text style={styles.menuText}>Preferences</Text>
+            </Pressable>
+        </View>
+    );
+
+    // Render the content based on the selected section
+    const renderContent = () => {
+        switch (activeSection) {
+            case 'trophies':
+                return (
+                    <View style={styles.trophiesSection}>
+                        {userProfile.trophies ? renderTrophies(userProfile.trophies) : <Text style={styles.noTrophiesText}>No trophies to display</Text>}
+                    </View>
+                );
+            case 'stats':
+                return (
+                    <View style={styles.statsContainer}>
+                        <View style={styles.statBox}>
+                            <Text style={styles.statNumber}>{userProfile.stats.gamesPlayed || 0}</Text>
+                            <Text style={styles.statLabel}>Jogos</Text> {/* Display Games */}
+                        </View>
+
+                        <View style={styles.statBox}>
+                            <Text style={styles.statNumber}>{userProfile.stats.goalsScored || 0}</Text>
+                            <Text style={styles.statLabel}>Golos</Text> {/* Display Goals */}
+                        </View>
+
+                        <View style={styles.statBox}>
+                            <Text style={styles.statNumber}>{userProfile.stats.assists || 0}</Text>
+                            <Text style={styles.statLabel}>Assistências</Text> {/* Display Assists */}
+                        </View>
+                    </View>
+                );
+            case 'preferences':
+                return (
+                    <View style={styles.preferencesContainer}>
+                        <View style={styles.preferenceItem}>
+                            <Text style={styles.preferenceLabel}>🦶 Pé Dominante:</Text>
+                            <Text style={styles.preferenceValue}>{userProfile.preferences?.dominantFoot || 'Não definido'}</Text>
+                        </View>
+
+                        <View style={styles.preferenceItem}>
+                            <Text style={styles.preferenceLabel}>🧩 Posição no Campo:</Text>
+                            <Text style={styles.preferenceValue}>{userProfile.preferences?.position || 'Não definido'}</Text>
+                        </View>
+
+                        <View style={styles.preferenceItem}>
+                            <Text style={styles.preferenceLabel}>🏟️ Tipo de Jogo:</Text>
+                            <Text style={styles.preferenceValue}>{userProfile.preferences?.gameType || 'Não definido'}</Text>
+                        </View>
+
+                        <View style={styles.preferenceItem}>
+                            <Text style={styles.preferenceLabel}>🕒 Horários Preferidos:</Text>
+                            <Text style={styles.preferenceValue}>{userProfile.preferences?.preferredTimes || 'Não definido'}</Text>
+                        </View>
+
+                        {/* Button to edit preferences always visible */}
+                        <Pressable style={styles.editButton} onPress={handleEditPreferences}>
+                            <Text style={styles.editButtonText}>Editar Preferências</Text>
+                        </Pressable>
+                    </View>
+                );
+            default:
+                return null;
         }
     };
 
@@ -95,89 +202,57 @@ export default function ProfileScreen() {
                         <Text style={styles.profileName}>{userProfile.profile.name} {userProfile.profile.surname}</Text>
 
                         {/* Botão para adicionar localização */}
-                        <Pressable>
-                            <Text style={styles.addLocation}>Adicionar a minha localização</Text>
-                        </Pressable>
+                        <Text style={styles.addLocation}>{userProfile.profile.country}</Text>
                     </View>
 
                     {/* Estatísticas do Perfil */}
                     <View style={styles.statsContainer}>
                         <View style={styles.statBox}>
-                            <Text style={styles.statNumber}>{userProfile.stats.gamesPlayed || 0}</Text>
-                            <Text style={styles.statLabel}>Jogos</Text>
-                        </View>
-                        <View style={styles.statBox}>
                             <Text style={styles.statNumber}>{userProfile.stats.followers || 0}</Text>
                             <Text style={styles.statLabel}>Seguidores</Text>
                         </View>
+
+                        {/* Trust Factor */}
+                        <View style={styles.statBox}>
+                            <Text
+                                style={[
+                                    styles.statNumber,
+                                    { color: getTrustFactorColor(userProfile.trustFactor) }
+                                ]}
+                            >
+                                {userProfile.trustFactor.toFixed(1)}
+                            </Text>
+                            <Text style={styles.statLabel}>Trust Factor</Text>
+                        </View>
+
                         <View style={styles.statBox}>
                             <Text style={styles.statNumber}>{userProfile.stats.following || 0}</Text>
-                            <Text style={styles.statLabel}>A Seguir</Text>
+                            <Text style={styles.statLabel}>Seguindo</Text>
                         </View>
                     </View>
 
-                    {/* Trust Factor */}
-                    <View style={styles.trustFactorContainer}>
-                        <Text style={styles.trustFactorLabel}>Trust Factor:</Text>
-                        <Text
-                            style={[
-                                styles.trustFactorValue,
-                                { color: getTrustFactorColor(userProfile.trustFactor) } // Apply dynamic color
-                            ]}
-                        >
-                            {userProfile.trustFactor.toFixed(1)}
-                        </Text>
+                    <View style={styles.unifiedContainer}>
+                        {/* Renderiza as opções de navegação (Trophies, Stats, Preferences) */}
+                        {renderMenuOptions()}
+
+                        {/* Renderiza o conteúdo com base na seção ativa */}
+                        {renderContent()}
                     </View>
-
-                    {/* Botões de Ação */}
-                    <View style={styles.buttonContainer}>
-                        <Pressable style={styles.editButton} onPress={handleEditProfile}>
-                            <Text style={styles.editButtonText}>Editar perfil</Text>
-                        </Pressable>
-
-                        <Pressable style={styles.premiumButton} onPress={handleBecomePremium}>
-                            <Text style={styles.premiumButtonText}>Torne-se Premium</Text>
-                        </Pressable>
-                    </View>
-
-                    {/* Seção de Preferências do Jogador */}
-                    <View style={styles.preferencesContainer}>
-                        <View style={styles.preferencesHeader}>
-                            <Text style={styles.preferencesTitle}>Preferências do Jogador</Text>
-                            <Text style={styles.editText} onPress={handleEditPreferences}>Editar</Text>
-                        </View>
-
-                        <View style={styles.preferenceItem}>
-                            <Text style={styles.preferenceLabel}>🦶 Pé Dominante:</Text>
-                            <Text
-                                style={styles.preferenceValue}>{userProfile.preferences?.dominantFoot || 'Não definido'}</Text>
-                        </View>
-
-                        <View style={styles.preferenceItem}>
-                            <Text style={styles.preferenceLabel}>🧩 Posição no Campo:</Text>
-                            <Text
-                                style={styles.preferenceValue}>{userProfile.preferences?.position || 'Não definido'}</Text>
-                        </View>
-
-                        <View style={styles.preferenceItem}>
-                            <Text style={styles.preferenceLabel}>🏟️ Tipo de Jogo:</Text>
-                            <Text
-                                style={styles.preferenceValue}>{userProfile.preferences?.gameType || 'Não definido'}</Text>
-                        </View>
-
-                        <View style={styles.preferenceItem}>
-                            <Text style={styles.preferenceLabel}>🕒 Horários Preferidos:</Text>
-                            <Text
-                                style={styles.preferenceValue}>{userProfile.preferences?.preferredTimes || 'Não definido'}</Text>
-                        </View>
-                    </View>
-
                 </View>
 
+                {/* Edit Profile and Premium Buttons */}
+                <View style={styles.buttonContainer}>
+                    <Pressable style={styles.editButton} onPress={handleEditProfile}>
+                        <Text style={styles.editButtonText}>Editar Perfil</Text>
+                    </Pressable>
+                    <Pressable style={styles.premiumButton} onPress={handleBecomePremium}>
+                        <Text style={styles.premiumButtonText}>Tornar-se Premium</Text>
+                    </Pressable>
+                </View>
             </View>
 
-            {/* Barra de Navegação */}
-            <NavigationBar selected="ProfileScreen" />
+            {/* Bottom Navigation */}
+            <NavigationBar selected="ProfileScreen"/>
         </View>
     );
 }
@@ -185,7 +260,20 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#191524',  // Set background to dark color
+        backgroundColor: '#191524',
+    },
+    unifiedContainer: {
+        backgroundColor: '#242031',
+        borderRadius: 15,
+        padding: 20,
+        marginVertical: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 10,
+        borderWidth: 1,
+        borderColor: '#453e50',
     },
     loadingText: {
         color: '#fff',
@@ -194,12 +282,11 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     profileContainer: {
-        paddingTop: 60,
         paddingHorizontal: 20,
     },
     profileHeader: {
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 25,
     },
     profileImage: {
         width: 100,
@@ -259,11 +346,11 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: '#ffffff',  // Set border color to white
+        borderColor: '#ffffff',
         alignItems: 'center',
     },
     editButtonText: {
-        color: '#ffffff',  // Set text color to white
+        color: '#ffffff',
         fontSize: 16,
         fontWeight: 'bold',
     },
@@ -284,7 +371,7 @@ const styles = StyleSheet.create({
     /* Preferences Section */
     preferencesContainer: {
         padding: 20,
-        backgroundColor: '#191524',  // Match the dark background color
+        backgroundColor: '#242031',  // Match the dark background color
     },
     preferencesHeader: {
         flexDirection: 'row',
@@ -300,7 +387,7 @@ const styles = StyleSheet.create({
     editText: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#1e3d7c',
+        color: '#007BFF',
     },
     preferenceItem: {
         flexDirection: 'row',
@@ -317,18 +404,66 @@ const styles = StyleSheet.create({
         color: '#cccccc',  // Set text color to a lighter shade for contrast
     },
 
-    /* Trust Factor Section */
-    trustFactorContainer: {
-        marginTop: 20,
-        alignItems: 'center',
+    // Menu Styles
+    menuContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 20,
+        paddingHorizontal: 15,
     },
-    trustFactorLabel: {
-        fontSize: 18,
-        color: '#ffffff',
+    menuOption: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    menuText: {
+        color: '#FFFFFF',
+        marginTop: 5,
+        fontSize: 14,
+        fontWeight: '500',
+    },
+    menuOptionSelected: {
+        backgroundColor: '#5E56E0',
+        borderWidth: 1,
+        borderColor: '#FFFFFF',
+    },
+
+    /* Trophies Section */
+    trophyContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        marginVertical: 20,
+    },
+    trophyBox: {
+        width: '30%', // Adjust the width according to your layout preference
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    trophyImage: {
+        width: 50,
+        height: 50,
         marginBottom: 5,
     },
-    trustFactorValue: {
+    trophyName: {
+        color: '#ffffff',
+        textAlign: 'center',
+    },
+    noTrophiesText: {
+        color: '#cccccc',
+        fontSize: 16,
+        textAlign: 'center',
+        marginVertical: 20,
+    },
+    trophiesSection: {
+        padding: 10,
+        backgroundColor: 'transparent',
+        borderWidth: 0,
+        marginVertical: 0,
+    },
+    trophiesTitle: {
         fontSize: 22,
         fontWeight: 'bold',
+        color: '#ffffff',
+        marginBottom: 10,
     },
 });
